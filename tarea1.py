@@ -120,11 +120,23 @@ print(pd.concat([df4, df5, df6]))
 
 #18.	Dibujar un gráfico de barras comparando el año, el ID, la producción y las horas de trabajo de las primeras 10 observaciones 
 
-df7 = pd.DataFrame({'P': [df3["Production"]],
-                   'L': [df3["Labor_Hours"]]}, index=df3["ID"])
-print(df7)
-
-ax = df7.plot.bar(rot=0)
-ax = df7.plot.bar(stacked=True)
+df['Año'] = df['date'].dt.year #armo columna año para usarla
+df3= df.head(n=10)
+import matplotlib.pyplot as plt
+plotear = df3[['Año', 'ID', 'Production','Labor_Hours']]
+ax = plt.gca() 
+plotear.plot(kind='bar',x='ID',y='Production',color='red',ax=ax)
+plotear.plot(kind='bar',x='ID',y='Labor_Hours',color='orange',ax=ax)
+plt.show()
 
 #19.	Dibujar un gráfico de barras de las 10 empresas con mayor producción 
+#Grafico para el top 10 de empresas 2006
+plotear2 = df[df['Año'] == 2006] #filtro año 2006
+plotear2.dropna(subset=['Production']) #quito valores na de produccion
+plotear2 = plotear2.sort_values("Production",ascending=False) #ordeno
+plotear2 = plotear2.head(n=10)
+plotear2 = plotear2[['Name', 'Production']]#me quedo con variables que voy a usar
+
+plotear2.plot(kind='bar',x='Name',y='Production',color='green') #grafico
+plt.show()
+
