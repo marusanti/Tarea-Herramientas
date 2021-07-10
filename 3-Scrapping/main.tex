@@ -48,7 +48,7 @@
         {\scshape\Large Maestría en Economía\par}
         \vspace{0.4cm}
 
-        {\Large\bfseries Herramientas computacionales - QGIS\par}
+        {\Large\bfseries Herramientas computacionales - Python Scrapping\par}
         
         \vspace{1cm}
         {\Large\itshape Matias Harari y Mariana Santi \par}
@@ -72,10 +72,10 @@
 %Empieza el trabajo
 \section*{Crimen y clima en condados de Maryland}
 
-En el siguiente trabajo, se exploran datos de hurtos del estado de Maryland, Estados Unidos para el año 2015. A cambio de un robo, en un hurto no existe ningún tipo de violencia o intimidación a la hora de querer apoderarse de un bien ajeno. En la Figura 1 puede verse que la relación entre hurtos y robos es alta, aunque los primeros son más usuales que los segundos.
+En el trabajo se exploran datos de hurtos en Maryland para el año 2015. A cambio de un robo, en un hurto no existe ningún tipo de violencia o intimidación a la hora de querer apoderarse de un bien ajeno. En la Figura 1 puede verse que la relación entre hurtos y robos es alta, aunque los primeros son más usuales que los segundos.
 
 
-En la Figura 1 también se presenta la relación entre la cantidad de hurtos y la intensidad de las precipitaciones anuales, medida en el promedio anual de mm. de lluvia y la cantidad total de hurtos cada 1000 habitantes. Una hipótesis es que existe una relación causal negativa, ya que los días lluviosos podrían desalentar este tipo de delitos que suelen ocurrir en la vía pública. Pareciera que efectivamente se cometen más hurtos en los días menos lluviosos, aunque la relación no es fuerte. %%En este caso, la variable robo refiere específicamente a tomar un bien que está bajo la custodia de otra persona o al intento de hacerlo. 
+En la Figura 1 también se presenta la relación entre la intensidad de las precipitaciones anuales (medida como el promedio anual de mm. de lluvia) y la cantidad total de hurtos cada 1000 habitantes. Una hipótesis de la literatura es que existe una relación causal negativa, ya que los días lluviosos podrían desalentar este tipo de delitos que suelen ocurrir en la vía pública. Pareciera que efectivamente se cometen más hurtos en los días menos lluviosos, aunque la relación no es fuerte. %%En este caso, la variable robo refiere específicamente a tomar un bien que está bajo la custodia de otra persona o al intento de hacerlo. 
 \begin{figure}[H]
 \centering
 \begin{subfigure}{.5\textwidth}
@@ -90,12 +90,12 @@ En la Figura 1 también se presenta la relación entre la cantidad de hurtos y l
     \includegraphics[scale=0.8]{plot_prec.png}
     \label{fig2}
 \end{subfigure}%
-\caption{Relación entre robos y hurtos (izq.) y entre precipitación y hurtos (der.) en condados Maryland.}
+\caption{Relación entre robos y hurtos (izq.) y entre precipitación y hurtos (der.) en condados Maryland. Ambos gráficos están en escala logarítmica para la variable Hurtos.}
 \end{figure}
 
-Como muestra la Figura 2, la cantidad de hurtos anuales es muy distinta entre los distintos condados. A su vez, en base a la Figura 3 se onbserva que algunos condados como Queen Aune's, Montgomery o Somere refuerzan la idea de una relación negativa, ya que presentan poca cantidad de hurtos y elevada cantidad de precipitación. Sin embargo, sucede lo contrario para otras ciudades, como Charles, Calvert o Prince George's, que muestran una relación positiva entre las variables. Por supuesto que, para realizar un análisis más profundo, habría que mirar los datos a nivel día y no año.
+Como muestra la Figura 2, la cantidad de hurtos anuales es muy distinta entre los distintos condados. A su vez, en base a la Figura 3 se observa que algunos condados como Queen Aune's, Montgomery o Somere refuerzan la idea de una relación negativa, ya que presentan poca cantidad de hurtos y elevada cantidad de precipitación. Sin embargo, sucede lo contrario para otras ciudades como Charles, Calvert o Prince George's, que muestran una relación positiva entre las variables. Por supuesto que, para realizar un análisis más profundo, habría que mirar los datos a nivel día y no año y basarse en algún modelo econométrico.
 
-La Figura 4 muestra el porcentaje de población de tez negra que vive en cada condado. Como hipótesis se puede conjeturar que la cantidad relativa de población negra por ciudad podría tener una relación positiva con la cantidad de hurtos debido a que las personas afroamericanas suelen insertarse en empleos de menor calificación y con menores salarios, en parte porque sufren discriminación. Por lo tanto, sería esperable que vivan en condados más pobres y con mayor inseguridad. Sin embargo, a partir de comparar las Figuras 2 y 4 no pareciera haber una relación obvia entre estas variables en el nivel de agregación anual.
+La Figura 4 muestra el porcentaje de población de tez negra que vive en cada condado. Como hipótesis se puede conjeturar que la cantidad relativa de población negra por ciudad podría tener una relación positiva con la cantidad de hurtos debido a que las personas afroamericanas suelen insertarse en empleos de menor calificación y con menores salarios, en parte porque sufren discriminación. Por lo tanto, sería esperable que vivan en condados más pobres y con mayor inseguridad. Sin embargo, a partir de comparar las Figuras 2 y 4 no pareciera haber una relación obvia entre estas variables en el nivel de agregación anual. Es probable que un análisis más desagregado (a nivel zipcode, por ejemplo) permita dilucidar estas cuestiones de manera más clara. 
 
 
 
