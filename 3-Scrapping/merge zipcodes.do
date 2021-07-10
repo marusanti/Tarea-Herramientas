@@ -1,4 +1,4 @@
-global INPUT "C:/Users/matia/Documents/UDESA/7_HComp/3-Scrapping"
+global INPUT "C:/Users/matia/Documents/UDESA/7_HComp/Tarea-Herramientas/3-Scrapping"
 
 ** Datos zipcode
 edit
@@ -48,10 +48,10 @@ replace ID=13	if county=="Harford"
 replace ID=14	if county=="Howard"
 replace ID=15	if county=="Kent"
 replace ID=16	if county=="Montgomery"
-replace ID=17	if county=="Prince George's"
-replace ID=18	if county=="Queen Anne's"
+replace ID=17	if county=="Prince Georges"
+replace ID=18	if county=="Queen Annes"
 replace ID=19	if county=="Somerset"
-replace ID=20	if county=="St. Mary's"
+replace ID=20	if county=="Saint Marys"
 replace ID=21	if county=="Talbot"
 replace ID=22	if county=="Washington"
 replace ID=23	if county=="Wicomico"
@@ -135,4 +135,4 @@ drop yyyy mm zip_m
 keep prec Assault BreakingnEntering Robbery Theft ID yymm
 /*reshape wide prec Assault BreakingnEntering Robbery Theft, i(ID) j(yymm) string
 */
-export delimited using "$INPUT/MD_crime_weather.csv"
+export delimited using "$INPUT/MD_crime_weather.csv", replace
