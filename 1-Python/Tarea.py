@@ -24,7 +24,7 @@ print(df["Production"].describe().round(decimals=1))
 
 import numpy as np
 
-df.insert(5, "columna", np.nan)
+df.insert(4, "columna", np.nan)
 
 #6.	Importar a un dataframe los datos saltando las primeras 10 filas. 
 
@@ -71,7 +71,7 @@ print(df.sort_values("Labor_Hours", ascending=False))
 
 #14.	Haga una lista en donde date esté entre febrero 2005 y noviembre 2006 
 
-print(df[(df['date'] > '2005-02-01') & (df['date'] < '2006-11-01')])
+print(df[(df['date'] >= '2005-02-01') & (df['date'] <= '2006-11-01')])
 
 #15.	Mostrar la lista de aquellos cuyos date sea 2005 
 
@@ -83,6 +83,7 @@ print((df.sort_values(by=['ID','date'], ascending=[0,1])))
 
 #17.	Crear tres hojas de datos (sheet) desde el archivo de Excel y combinarlas en un único Excel.
 # Las tres hojas de datos son las mismas, sería triplicar el Excel 
+
 
 df4 = pd.DataFrame([['a', 1], ['b', 2]],
                    columns=['letter', 'number'])
