@@ -84,3 +84,29 @@ map <- ggplot(lnd_f, aes(long, lat, group = group, fill = CrimeCount_pc)) +
 ggsave("London_R_gg.png", dpi = 300, width = 50, height = 30, units = "cm")
 
 
+## Opcion 2 
+map2 <- ggplot(lnd_f, aes(long, lat, group = group, fill = CrimeCount_pc)) +
+  geom_polygon() + coord_equal() +
+  annotate(geom="text", x=525118.5, y=181295.6, label="Westminster", color="white", size=9) +
+  annotate(geom="text", x=549169.8, y=175905.6, label="Bexley", color="white", size=9) +
+  scale_fill_gradient(low="lightpink1",high="hotpink4", na.value= "white") +
+  ggtitle("Hurtos en Londres en 2001", subtitle ="Casos registrados por distrito cada 1000 habitantes.") +
+  theme(plot.title=element_text(color="cadetblue4",size=40, hjust = -0.2, face="bold"),
+        plot.subtitle=element_text(color="black",size=30, hjust = -0.41, face="bold"),
+        panel.background = element_rect(fill = "white", colour = "white"),
+        panel.grid=element_blank(),
+        legend.position = c(-.1, .95),
+        legend.justification = c("left", "top"),
+        legend.key.size = unit(2, 'cm'),
+        legend.box.just = "right",
+        legend.text=element_text(size=22),
+        legend.title = element_blank(),
+        legend.key = element_rect(color=3,fill="gray97"),
+        axis.title=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank())
+
+#Exportar
+ggsave("London_R_gg2.png", dpi = 300, width = 50, height = 30, units = "cm")
+
+
