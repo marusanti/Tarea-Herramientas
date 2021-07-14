@@ -8,6 +8,7 @@ library("corrplot")
 library("maps")
 library("mapproj")
 library("Lock5Data")
+library(grid)
 
 
 ##Correcciones
@@ -39,10 +40,8 @@ ggplot(us_data, aes(x=long, y=lat, group=group, fill=ObamaVote)) +
   labs(title="Votos a Obama por estados",subtitle="En porcentaje")
 ggsave("graficos/Obamavote2.png")
 
-#Ver algunas de estas opciones
-####2. ####
-
-# Aim: To make a scatter plot for the most correlated variables and then fit a linear regression model to it.”
+####2. Base Loans ####
+#grafico de clase
 df3 <- read.csv("data/LoanStats.csv")
 t <- subset(df3,grade=="A")
 z1 <- ggplot(t, aes(total_pymnt_inv,total_rec_prncp,color=grade)) + 
@@ -50,23 +49,25 @@ z1 <- ggplot(t, aes(total_pymnt_inv,total_rec_prncp,color=grade)) +
 
 z2 <- ggplot(t, aes(funded_amnt,total_pymnt_inv,color=grade)) +
   geom_point() + stat_smooth(method=lm,color=2)
+s1<-grid.arrange(z1,z2,ncol=2)
+ggsave("graficos/scatter plot1.png",s1,width = 6)
 
-grid.arrange(z1,z2,ncol=2)
-
-#REpite la leyenda, repite las escalas. Poner título y cambiar ejes
+#Repite la leyenda, repite las escalas. Poner título y cambiar ejes
 #Queda mejor a la vista con numeros en miles
 #Corregido
-t<-t %>% mutate(total_rec_prncp=total_rec_prncp/10000,
-                total_pymnt_inv=total_pymnt_inv/10000,
-                funded_amnt=funded_amnt/10000)
+t<-t %>% mutate(total_rec_prncp=total_rec_prncp/1000,
+                total_pymnt_inv=total_pymnt_inv/1000,
+                funded_amnt=funded_amnt/1000)
 z1 <- ggplot(t, aes(total_rec_prncp,total_pymnt_inv,color=grade)) + 
   geom_point() +
   theme_classic()+ 
   theme(legend.position = "none")+
-  ylim(0,4)+
-  xlab("variable")+
-  ylab("variable")+
-  stat_smooth(method=lm)
+  ylim(0,40)+
+  xlab("Principal recibido")+
+  ylab("Total pagos recibidos")+
+  stat_smooth(method=lm,color=2)+
+  theme(axis.title.y=element_text(size=8),
+        axis.title.x=element_text(size=8))
 
 z2 <- ggplot(t, aes(funded_amnt,total_pymnt_inv,color=grade)) +
   geom_point() + 
@@ -74,53 +75,61 @@ z2 <- ggplot(t, aes(funded_amnt,total_pymnt_inv,color=grade)) +
   theme(axis.title.y=element_blank(),
         legend.position = "none",
         axis.text.y=element_blank(),
-        axis.ticks.y=element_blank())+
-  xlab("variable")+
-  ylim(0,4)+
+        axis.ticks.y=element_blank(),
+        axis.title.x=element_text(size=8))+
+  xlab("Monto total del préstamo")+
+  ylim(0,40)+
   stat_smooth(method=lm,color=2)
 
-
-grid.arrange(z1,z2,ncol=2, top ="Relación entre - en miles",
+s2<-grid.arrange(z1,z2,ncol=2,
+                 top=textGrob("Variables relacionadas con los pagos de clientes de calificación credicitia A
+                              (en miles de USD)", gp=gpar(fontsize=8)),
              widths=c(1,0.9))
+ggsave("graficos/scatter plot2.png",s2)
 
-####2.Consumo de electricidad y GDP pc####
-df <- read.csv("data/gapminder-data.csv")
-p <- ggplot(df, aes(x=gdp_per_capita, y=Electricity_consumption_per_capita)) + 
-  geom_point()
-p + facet_grid(Country ~ .)
-p <- ggplot(df, aes(x=gdp_per_capita, y=Electricity_consumption_per_capita,
-                    colour=Country)) + 
-  geom_point()
-p
+####3.BAse Loans####
+#Supongamos que un banco ha concedido préstamos a personas con características diferentes (por ejemplo, situación laboral, propiedad de la vivienda, grado de crédito, etc.) y queremos ver las relaciones entre algunas de esas variables.
+#Objetivo: Ver la distribución de la cantidad de préstamo frente a ser propietario de una casa usando diferentes colores según el nivel de crédito".
 
-##
-dfs <- subset(df,Country %in% c("Germany","India","China","United States","Japan"))
-ggplot(dfs,aes(x=Year,y=Electricity_consumption_per_capita)) + 
-  geom_point(aes(size=population,color=Country))+
-  coord_cartesian(xlim=c(1950,2020))+
-  labs(subtitle="Electricity consumption vs Year",
-       title="Bubble chart")+ylab("Electricity consumption")+
-  scale_size(breaks=c(0,1e+8,0.3e+9,0.5e+9,1e+9,1.5e+9),range=c(1,5))
+dfn <- df3[,c("home_ownership","loan_amnt","grade")]
+dfn <- na.omit(dfn) #remove NA y NONE
+dfn <- subset(dfn, !dfn$home_ownership %in% c("NONE"))
+g1<-ggplot(dfn,aes(x=home_ownership,y=loan_amnt))+geom_boxplot(aes(fill=grade))
+ggsave("graficos/loans1.png",g1)
+#Notas
+#People with higher credit grades take smaller loans
+#People with lower credit grades take small loans if they don't have a mortgage.
+#Corregido
+dfn<-dfn %>% 
+    mutate(loan_amnt=loan_amnt/1000)
+g2<-ggplot(dfn,aes(x=grade,y=loan_amnt))+
+  geom_boxplot(aes(fill=grade))+
+  facet_grid(~ home_ownership) +
+  theme_minimal()+
+  labs(title= "Loans according to credit grade and home ownership",
+       subtitle="Thousand dolars")+
+  theme(legend.position="none",
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        title =element_text(size=8, face='bold'))
+ggsave("graficos/loans2.png",g2)
+#Otra propuesta:
+dfn<-dfn %>%  
+  group_by(home_ownership,grade) %>% 
+  mutate(loan_mean=mean(loan_amnt)) %>% 
+  select(loan_mean,grade,home_ownership) %>% unique()
+
+g3<-ggplot(dfn,aes(x = grade, y = loan_mean,fill=grade)) +
+  geom_bar(stat = "identity") +
+  facet_grid(~ home_ownership) + 
+  theme_minimal()+
+  labs(title= "Average loan amount by credit grade and home ownership",
+       subtitle="Thousand dolars")+
+  theme(legend.position="none",
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        title =element_text(size=7, face='bold'))
+ggsave("graficos/loans3.png",g3)
 
 
-ggplot(dfs,aes(x=Year,y=Electricity_consumption_per_capita)) + 
-  geom_line(fun.y=population) +
-  coord_cartesian(xlim=c(1950,2020))+
-  facet_wrap(~Country)
 
-
-##
-colnames(dfs1) <- c("gdp","electricity","mort","pov","bmi_m","bmi_f")
-M <- cor(dfs1)
-corrplot(M,method="color", order = 'alphabet')
-
-corrplot(M,
-         order = 'AOE', addCoef.col = 'black', tl.pos = 'd',
-         cl.pos = 'n', col = "red")
-
-corrplot(M,method="circle", order = 'AOE')
-#https://cran.r-project.org/web/packages/corrplot/vignettes/corrplot-intro.html
-
-
-
-##### Fin tarea 1 #####
