@@ -14,10 +14,6 @@ library("corrplot")
 library("maps")
 library("mapproj")
 
-#Pathname 
-setwd("~/UDESA/7_HComp/Tarea-Herramientas/4-Visualization/Tarea2")
-
-getwd()
 
 #Importar data
 library(rgdal)
@@ -48,10 +44,39 @@ lnd@data$CrimeCount_pc <- lnd@data$CrimeCount/lnd@data$Pop_2001*1000
 library(tmap) 
 
 
-tmap <- qtm(shp = lnd, style="cobalt",  fill = "CrimeCount_pc", fill.palette = "Reds", fill.title = "Cases (per 1000 people)", title="Theft & Handling in London") + tm_borders(alpha=.5) 
+tmap <- tm_shape(lnd) +
+  tm_polygons("CrimeCount_pc",
+              palette = "Reds",
+              border.col = "white",
+              breaks = c(0, 50, 75, 100, 200, 300, 400),
+              midpoint = 0.7,
+              title = c("")) + 
+  tm_scale_bar(position = c("center", "top"),
+               text.color="white", width = 0.2, text.size = 0.8) +
+  tm_layout(
+    bg.color="blue",
+    inner.margins = 0.15,
+    frame = FALSE,
+    main.title = "Theft & Handling in London",
+    title = "Cases (per 1000 people)",
+    main.title.position = c("left", "top"),
+    title.position = c("left", "top"),
+    legend.position = c("left","top"),
+    main.title.color = "white",
+    title.color = "white",
+    legend.text.color = "white",
+    main.title.fontface = 2,
+    main.title.size = 1.5,
+    title.size = 1.2,
+    legend.text.size = 0.85,
+    legend.bg.color = "blue",
+    legend.bg.alpha = 0)
+
+tmap
+
 
 #Exportar
-tmap_save(tm=tmap, "London_R_tmap.png", dpi = 300, width = 23, height = 17, units = "cm")
+tmap_save(tm=tmap, "output/London_R_tmap.png", dpi = 300, width = 18, height = 16, units = "cm")
 
 #Plotear con GG
 lnd_f <- broom::tidy(lnd)
@@ -59,20 +84,24 @@ lnd$id <- row.names(lnd)
 head(lnd@data, n = 2) 
 lnd_f <- left_join(lnd_f, lnd@data)
 
-map <- ggplot(lnd_f, aes(long, lat, group = group, fill = CrimeCount_pc)) +
-  geom_polygon() + coord_equal() +
-  annotate(geom="text", x=525118.5, y=181295.6, label="Westminster", color="white", size=9) +
-  annotate(geom="text", x=549169.8, y=175905.6, label="Bexley", color="white", size=9) +
-  scale_fill_gradient(low = "blue", high = "red", na.value= "white") +
-  ggtitle("Hurtos en Londres en 2001", subtitle ="Casos registrados por distrito cada 1000 habitantes.") +
+mapgg2 <- ggplot(lnd_f, aes(long, lat, group = group,
+                            fill = CrimeCount_pc)) +
+  geom_polygon(colour = "red", size = 0.4) + coord_equal() +
+  annotate(geom="text", x=525118.5, y=181295.6,
+           label="Westminster", color="cadetblue4", size=9) +
+  annotate(geom="text", x=549169.8, y=175905.6,
+           label="Bexley", color="cadetblue4", size=9) +
+  scale_fill_gradient2(low="hotpink1",midpoint = -200, high="hotpink4", na.value= "white") +
+  ggtitle("Hurtos en Londres en 2001", 
+          subtitle ="Casos registrados por distrito cada 1000 habitantes.") +
   theme(plot.title=element_text(color="cadetblue4",size=40, hjust = -0.2, face="bold"),
-        plot.subtitle=element_text(color="black",size=30, hjust = -0.41, face="bold"),
+        plot.subtitle=element_text(color="cadetblue4",size=30, hjust = -0.41, face="bold"),
         panel.background = element_rect(fill = "white", colour = "white"),
         panel.grid=element_blank(),
         legend.position = c(-.1, .95),
         legend.justification = c("left", "top"),
         legend.key.size = unit(2, 'cm'),
-        legend.box.just = "right",
+        legend.box.just = "left",
         legend.text=element_text(size=22),
         legend.title = element_blank(),
         legend.key = element_rect(color=3,fill="gray97"),
@@ -80,33 +109,9 @@ map <- ggplot(lnd_f, aes(long, lat, group = group, fill = CrimeCount_pc)) +
         axis.text=element_blank(),
         axis.ticks=element_blank())
 
-#Exportar
-ggsave("London_R_gg.png", dpi = 300, width = 50, height = 30, units = "cm")
-
-
-## Opcion 2 
-map2 <- ggplot(lnd_f, aes(long, lat, group = group, fill = CrimeCount_pc)) +
-  geom_polygon() + coord_equal() +
-  annotate(geom="text", x=525118.5, y=181295.6, label="Westminster", color="white", size=9) +
-  annotate(geom="text", x=549169.8, y=175905.6, label="Bexley", color="white", size=9) +
-  scale_fill_gradient(low="lightpink1",high="hotpink4", na.value= "white") +
-  ggtitle("Hurtos en Londres en 2001", subtitle ="Casos registrados por distrito cada 1000 habitantes.") +
-  theme(plot.title=element_text(color="cadetblue4",size=40, hjust = -0.2, face="bold"),
-        plot.subtitle=element_text(color="black",size=30, hjust = -0.41, face="bold"),
-        panel.background = element_rect(fill = "white", colour = "white"),
-        panel.grid=element_blank(),
-        legend.position = c(-.1, .95),
-        legend.justification = c("left", "top"),
-        legend.key.size = unit(2, 'cm'),
-        legend.box.just = "right",
-        legend.text=element_text(size=22),
-        legend.title = element_blank(),
-        legend.key = element_rect(color=3,fill="gray97"),
-        axis.title=element_blank(),
-        axis.text=element_blank(),
-        axis.ticks=element_blank())
+mapgg2
 
 #Exportar
-ggsave("London_R_gg2.png", dpi = 300, width = 50, height = 30, units = "cm")
+ggsave("output/London_R_gg2.png", dpi = 300, width = 50, height = 30, units = "cm")
 
 
