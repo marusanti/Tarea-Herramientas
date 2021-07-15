@@ -74,7 +74,6 @@ tmap <- tm_shape(lnd) +
 
 tmap
 
-
 #Exportar
 tmap_save(tm=tmap, "output/London_R_tmap.png", dpi = 300, width = 18, height = 16, units = "cm")
 

@@ -40,6 +40,26 @@ ggplot(us_data, aes(x=long, y=lat, group=group, fill=ObamaVote)) +
   labs(title="Votos a Obama por estados",subtitle="En porcentaje")
 ggsave("graficos/Obamavote2.png")
 
+#Grafico corregido v2
+#Tiene elementos de más
+#Colores muy chillones
+#Me parece que queda mejor poner el porcentaje que la proporcion
+us_data<-us_data %>%  mutate(ObamaVote=ObamaVote*100)
+ggplot(us_data, aes(x=long, y=lat, group=group, fill=ObamaVote)) + 
+  geom_polygon(colour="black") +
+  coord_map("mercator")+scale_fill_gradient(low="lightpink1",high="hotpink4")+
+  theme(axis.title.x=element_blank(),#esto es para sacar el titulo del eje
+        axis.text.x=element_blank(), #esto es para sacar los numeritos/texto 
+        axis.ticks.x=element_blank(),#esto es para sacar las barritas del eje
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        panel.background = element_rect(fill = "white", colour = "white"), #el grid no aporta nada
+        legend.title = element_blank())+ #es redundante el titulo de la legenda
+  labs(title="Votos a Obama por estados",subtitle="En porcentaje")
+ggsave("graficos/Obamavote2_v2.png")
+
+
 ####2. Base Loans ####
 #grafico de clase
 df3 <- read.csv("data/LoanStats.csv")
