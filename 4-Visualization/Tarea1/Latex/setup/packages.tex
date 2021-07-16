@@ -1,0 +1,133 @@
+%Adapted from Adapted from UWA Engineering Final Year Project.
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[x11names,dvipsnames,svgnames,table]{xcolor}
+
+% general incantations
+\usepackage[export]{adjustbox}
+\usepackage{afterpage}
+
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{pdfpages}
+\usepackage{algorithm2e}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage[most]{tcolorbox}
+\usepackage{calligra}
+\usepackage{caption}
+\usepackage{datetime}
+\usepackage{dirtytalk}
+\usepackage{dsfont}
+\usepackage{etex}
+\usepackage{fancyhdr}
+\usepackage{fix-cm}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp,gensymb} %for \degree C symbol
+\usepackage{graphicx}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{transparent}
+\usepackage[everyline=true,framemethod=tikz]{mdframed}
+\usepackage{mparhack}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{parskip}
+\usepackage{lscape}
+\usepackage{pdflscape}
+\usepackage{pdfpages}
+\usepackage{placeins}
+\usepackage[document]{ragged2e}
+\usepackage{rotating}
+\usepackage{setspace}
+\usepackage{subcaption}
+\usepackage{threeparttable}
+\usepackage[normalem]{ulem}
+\usepackage{verbatim}
+\usepackage{soul} %highlighting, strike through etc.
+
+%Automated appendices
+\usepackage[titletoc,title,header]{appendix} %advanced functionality
+
+%language settings
+\usepackage[utf8]{inputenc}
+\usepackage{csquotes}
+
+%page setup
+%this where we adjust the binding offset, if relevant
+\usepackage{geometry}
+\geometry{left=2cm,right=2cm,top=2cm,bottom=2cm}
+\usepackage{lastpage} % for page 1 of n footers
+
+%cross referencing
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+%maths stuff
+\usepackage{amsmath}
+\usepackage{mathtools}
+
+\setcounter{secnumdepth}{5}
+
+%lists
+\usepackage{enumitem}
+
+%working collaboratively
+\usepackage[backgroundcolor=yellow]{todonotes}
+
+% bibliography file using harvard
+\usepackage[style=apa,citestyle=bwl-FU,backend=biber, sorting=nyt]{biblatex}
+\bibliography{bibliography.bib} % with extension
+
+%glossary for acronyms
+\usepackage[acronym,nonumberlist,toc,section=subsection,numberedsection=nolabel]{glossaries} 
+\makeglossaries
+
+%line spacing
+\linespread{1.6}
+
+
+\usepackage{times}                      %Times New Roman
+\usepackage{setspace}                   %Para espaciar
+%\linespread{1.25}                      %Interlineado 1.5
+%\singlespacing                          %Espaciado simple
+
+\newcommand*\Heq{\ensuremath{\overset{\kern2pt LH }{=}}}
+\newcommand{\Lagr}{\mathcal{L}}         %L (lagrangiano o fun de verosimilitud)
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\newcommand{\R}{\mathbb{R}}             %Real numbers
+\usepackage[utf8x]{inputenc}
+%\usepackage{apacite}                    %Citas tipo apa
+%\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+%\usepackage{cite}
+%\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry} %Deberían ser 3 y 3 los left y right pero lo hago así para que entre mejor
+%\usepackage[round]{natbib}              %Bibliografía
+%\usepackage[utf8]{inputenc}
+%\usepackage{amsmath}
+%\usepackage{mathtools}                  %Loads amsmath
+\usepackage{amssymb}
+
+\numberwithin{equation}{section}
+\usepackage{hyperref}
+\usepackage{color}   %May be necessary if you want to color links
+ \hypersetup{
+     colorlinks=false, %set true if you want colored links
+     linktoc=all,     %set to all if you want both sections and sections linked
+     linkcolor=blue,  %choose some color if you want links to stand out
+ }
+ \usepackage[spanish,es-tabla]{babel}
+ \usepackage{graphicx}
+ \usepackage{physics}
+ %\usepackage[hidelinks]{hyperref}
+
+\usepackage{amssymb}    %Para tener los check mark y cruces
+\usepackage{pifont}     %Para tener los check mark y cruces
+\newcommand{\cmark}{\ding{51}} %Para tener los check mark y cruces
+\newcommand{\xmark}{\ding{55}}  %Para tener los check mark y cruces
+\usepackage{float}
+
+%Esto lo podés volar
+% \usepackage{xcolor}                 %Night mode
+% \pagecolor[rgb]{0,0,0} %black       %Night mode
+% \color[rgb]{0.8,0.8,0.8} %grey      %Night mode
