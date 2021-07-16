@@ -87,7 +87,9 @@ z1 <- ggplot(t, aes(total_rec_prncp,total_pymnt_inv,color=grade)) +
   ylab("Total pagos recibidos")+
   stat_smooth(method=lm,color=2)+
   theme(axis.title.y=element_text(size=8),
-        axis.title.x=element_text(size=8))
+        axis.title.x=element_text(size=8),
+        title=element_text(size=7))
+
 
 z2 <- ggplot(t, aes(funded_amnt,total_pymnt_inv,color=grade)) +
   geom_point() + 
@@ -101,10 +103,14 @@ z2 <- ggplot(t, aes(funded_amnt,total_pymnt_inv,color=grade)) +
   ylim(0,40)+
   stat_smooth(method=lm,color=2)
 
+
 s2<-grid.arrange(z1,z2,ncol=2,
-                 top=textGrob("Variables relacionadas con los pagos de clientes de calificación credicitia A
-                              (en miles de USD)", gp=gpar(fontsize=8)),
-             widths=c(1,0.9))
+                 name="hola",
+                 top=textGrob("Variables relacionadas con los pagos de clientes de calificación credicitia A \n En miles de USD",
+                              x = 0, hjust = 0,gp=gpar(fontsize=8)),
+            widths=c(1,0.9))
+#\n sirve para escribir en la linea de abajo
+#x= 0 y hjust=0 es para que alinear titulo a la izquierda
 ggsave("graficos/scatter plot2.png",s2)
 
 ####3.BAse Loans####

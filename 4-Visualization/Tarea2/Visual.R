@@ -54,7 +54,7 @@ tmap <- tm_shape(lnd) +
   tm_scale_bar(position = c("center", "top"),
                text.color="white", width = 0.2, text.size = 0.8) +
   tm_layout(
-    bg.color="blue",
+    bg.color="steelblue",#cambie el blue
     inner.margins = 0.15,
     frame = FALSE,
     main.title = "Theft & Handling in London",
@@ -69,13 +69,13 @@ tmap <- tm_shape(lnd) +
     main.title.size = 1.5,
     title.size = 1.2,
     legend.text.size = 0.85,
-    legend.bg.color = "blue",
+    legend.bg.color = "steelblue",#cambie el blue
     legend.bg.alpha = 0)
 
 tmap
 
 #Exportar
-tmap_save(tm=tmap, "output/London_R_tmap.png", dpi = 300, width = 18, height = 16, units = "cm")
+tmap_save(tm=tmap, "output/London_R_tmap_v2.png", dpi = 300, width = 18, height = 16, units = "cm")
 
 #Plotear con GG
 lnd_f <- broom::tidy(lnd)
@@ -87,9 +87,9 @@ mapgg2 <- ggplot(lnd_f, aes(long, lat, group = group,
                             fill = CrimeCount_pc)) +
   geom_polygon(colour = "red", size = 0.4) + coord_equal() +
   annotate(geom="text", x=525118.5, y=181295.6,
-           label="Westminster", color="cadetblue4", size=9) +
+           label="Westminster", color="black", size=9) +#cambie aca
   annotate(geom="text", x=549169.8, y=175905.6,
-           label="Bexley", color="cadetblue4", size=9) +
+           label="Bexley", color="black", size=9) +#cambie aca
   scale_fill_gradient2(low="hotpink1",midpoint = -200, high="hotpink4", na.value= "white") +
   ggtitle("Hurtos en Londres en 2001", 
           subtitle ="Casos registrados por distrito cada 1000 habitantes.") +
@@ -111,6 +111,6 @@ mapgg2 <- ggplot(lnd_f, aes(long, lat, group = group,
 mapgg2
 
 #Exportar
-ggsave("output/London_R_gg2.png", dpi = 300, width = 50, height = 30, units = "cm")
+ggsave("output/London_R_gg2_v2.png", dpi = 300, width = 50, height = 30, units = "cm")
 
 
