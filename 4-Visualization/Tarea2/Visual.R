@@ -75,7 +75,7 @@ tmap <- tm_shape(lnd) +
 tmap
 
 #Exportar
-tmap_save(tm=tmap, "output/London_R_tmap_v2.png", dpi = 300, width = 18, height = 16, units = "cm")
+tmap_save(tm=tmap, "output/London_R_tmap.png", width = 18, height = 16, units = "cm")
 
 #Plotear con GG
 lnd_f <- broom::tidy(lnd)
@@ -111,6 +111,6 @@ mapgg2 <- ggplot(lnd_f, aes(long, lat, group = group,
 mapgg2
 
 #Exportar
-ggsave("output/London_R_gg2_v2.png", dpi = 300, width = 50, height = 30, units = "cm")
+ggsave("output/London_R_gg2.png", dpi = 300, width = 50, height = 30, units = "cm")
 
 
