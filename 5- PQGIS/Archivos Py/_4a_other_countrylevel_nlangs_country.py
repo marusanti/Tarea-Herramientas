@@ -26,16 +26,18 @@ Processing.initialize()
 QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
 
-# Setear directorio de trabajo
+# Setear carpetas de inputs
 
 mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" 
+outpath = "{}/_output/".format(mainpath)
 
 # Inputs. Los mainpath son de archivos de input data, mientras que los de outpath son outputs de códigos anteriores
 
-admin = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath) #shapefile de condados USA
-outpath = "{}/_output/".format(mainpath)  
+admin = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath) #shapefile de países 
 greg = "{}/greg_cleaned.shp".format(outpath) # 
 wlds = "{}/wlds_cleaned.shp".format(outpath) #
+
+# Output
 
 outcsv = "{}/nlangs_country.csv".format(outpath) #archivo csv final
 
