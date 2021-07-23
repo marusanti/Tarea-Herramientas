@@ -30,11 +30,11 @@
 #########################################################################################
 #########################################################################################
 
-# Seteamos rutas 
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-suitin = "{}/suit/suit/hdr.adf".format(mainpath)
-outpath = "{}/_output/".format(mainpath)
-suitout = "{}/landquality.tif".format(outpath)
+# Seteamos rutas de inputs y outpus
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"#carpeta general de inputs
+suitin = "{}/suit/suit/hdr.adf".format(mainpath)#archivo input
+outpath = "{}/_output/".format(mainpath)#carpeta para guardar outputs
+suitout = "{}/landquality.tif".format(outpath) #archivo output
 
 #A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
 #traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
