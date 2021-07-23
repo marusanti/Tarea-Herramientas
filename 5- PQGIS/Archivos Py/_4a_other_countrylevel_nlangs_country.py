@@ -1,70 +1,64 @@
-#########################################################################################
-#########################################################################################
-# SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
-# NOT NECESSARY IF YOU ARE RUNNING THIS INSIDE THE QGIS GUI.
-# print('preliminary setup')
-# import sys
-# import os
+##Objetivo: Cuantificar número de lenguajes por país
 
-# from qgis.core import (
-#     QgsApplication
-# )
+#Importacion de librerias
+print('preliminary setup')
+import sys
+import os
 
-# from qgis.analysis import QgsNativeAlgorithms
+from qgis.core import (
+     QgsApplication
+ )
 
-# # See https://gis.stackexchange.com/a/155852/4972 for details about the prefix 
-# QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
-# qgs = QgsApplication([], False)
-# qgs.initQgis()
+ from qgis.analysis import QgsNativeAlgorithms
+ 
+#Ruta de la ubicacion de qgis 
+ QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+ qgs = QgsApplication([], False)
+ qgs.initQgis()
 
-# # Add the path to Processing framework  
-# sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
+#Ruta del marco de procesamiento
+sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
 
-# # Import and initialize Processing framework
-# import processing
-# from processing.core.Processing import Processing
-# Processing.initialize()
-# QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
-#########################################################################################
+# Importar e iniciar marco de procesamiento
+import processing
+from processing.core.Processing import Processing
+Processing.initialize()
+QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
 
-# set paths to inputs and outputs
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-outpath = "{}/_output/".format(mainpath)
-greg = "{}/greg_cleaned.shp".format(outpath)
-wlds = "{}/wlds_cleaned.shp".format(outpath)
-admin = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath)
-outcsv = "{}/nlangs_country.csv".format(outpath)
+# Setear directorio de trabajo
 
-#########################################################################
-#########################################################################
-# 1) number of languages per country
-#########################################################################
-#########################################################################
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" 
+
+# Inputs. Los mainpath son de archivos de input data, mientras que los de outpath son outputs de códigos anteriores
+
+admin = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath) #shapefile de condados USA
+outpath = "{}/_output/".format(mainpath)  
+greg = "{}/greg_cleaned.shp".format(outpath) # 
+wlds = "{}/wlds_cleaned.shp".format(outpath) #
+
+outcsv = "{}/nlangs_country.csv".format(outpath) #archivo csv final
 
 #########################################################
 # Fix geometries
-#########################################################
+#Corregimos la geometria del shapefile de lenguajes
 print('fixing geometries, languages')
 fg1_dict = {
     'INPUT': wlds,
     'OUTPUT': 'memory:'
 }
-fixgeo_wlds = processing.run('native:fixgeometries', fg1_dict)['OUTPUT']
+fixgeo_wlds = processing.run('native:fixgeometries', fg1_dict)['OUTPUT'] #output
 
-#########################################################
-# Fix geometries
-#########################################################
+#Corregimos la geometria del shapefile de países 
 print('fixing geometries, countries')
 fg2_dict = {
     'INPUT': admin,
     'OUTPUT': 'memory:'
 }
-fixgeo_countries = processing.run('native:fixgeometries', fg2_dict)['OUTPUT']
+fixgeo_countries = processing.run('native:fixgeometries', fg2_dict)['OUTPUT'] #output
 
-#########################################################
 # Intersection
-#########################################################
+#Nos quedamos con los países que tienen idiomas
 print('intersecting')
 int_dict = {
     'INPUT': fixgeo_wlds,
@@ -73,17 +67,17 @@ int_dict = {
     'OVERLAY_FIELDS': 'ADMIN',
     'OUTPUT': 'memory:'
 }
-intersection = processing.run('native:intersection', int_dict)['OUTPUT']
+intersection = processing.run('native:intersection', int_dict)['OUTPUT'] #output
 
-#########################################################
+
 # Statistics by categories
-#########################################################
+# Contamos la cantidad de idiomas por países
 print('statistics by categories')        
 sbc_dict = {
     'CATEGORIES_FIELD_NAME': 'ADMIN',
     'INPUT': intersection,
     'VALUES_FIELD_NAME': None,
-    'OUTPUT': outcsv
+    'OUTPUT': outcsv #output final
 }
 processing.run('qgis:statisticsbycategories', sbc_dict)
 
