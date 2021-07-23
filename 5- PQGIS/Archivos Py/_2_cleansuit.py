@@ -30,17 +30,33 @@
 #########################################################################################
 #########################################################################################
 
-# set paths to inputs and outputs
+# Seteamos rutas 
 mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
 suitin = "{}/suit/suit/hdr.adf".format(mainpath)
 outpath = "{}/_output/".format(mainpath)
 suitout = "{}/landquality.tif".format(outpath)
 
-# defining WGS 84 SR
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
+#traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
+#indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
+#parametros. Para especificar los parametros se usa un diccionario.
+#Cada algoritmo tiene determinados parametros, aunque algunos se repiten
+#en varios casos. Por ejemplo, el parametro INPUT donde se especifica el 
+#archivo de origen para realizar las operaciones. El parametro output especifica
+#el archivo de salida. No siempre vamos a guardarlo sino que a veces se coloca
+#'memory' para que quede guardado en la memoria de la computadora y podamos 
+#usarlo para otros procesos.
+#En nuestros casos, como se utilizan los mismos parametros para el algoritmo
+# inicial y final se coloca ['OUTPUT']. Si se usaran distintos parametros 
+#habria que colocar 2 diccionarios con los parametros
+
+# Definiendo WGS 84 SR
 crs_wgs84 = QgsCoordinateReferenceSystem("epsg:4326")
 
 ##################################################################
 # Warp (reproject)
+#Reproyectar una capa raster a otro CRS, en este caso a las proyecciones
+#que definimos en crs_wgs84
 ##################################################################
 # note: Warp does not accept memory output
 # could also specify: 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
@@ -50,28 +66,32 @@ print('defining projection for the suitability data')
 warp_dict = {
     'DATA_TYPE': 0,
     'EXTRA': '',
-    'INPUT': suitin,
+    'INPUT': suitin,#base raster que indica calidad de la tierra
     'MULTITHREADING': False,
     'NODATA': None,
     'OPTIONS': '',
-    'RESAMPLING': 0,
+    'RESAMPLING': 0,#se elige metodo near para reproyeccion
     'SOURCE_CRS': None,
-    'TARGET_CRS': crs_wgs84,
+    'TARGET_CRS': crs_wgs84, #CRS elegido
     'TARGET_EXTENT': None,
     'TARGET_EXTENT_CRS': None,
     'TARGET_RESOLUTION': None,
     'OUTPUT': suitout
 }
 processing.run('gdal:warpreproject', warp_dict)
-
+#En este caso la funcion processing.run usa el algorimo gdal:warpreproject 
+#para reproyectar la capa raster a otro CRS 
+#Utiliza los parametros definidos en warp_dict especificos para este algoritmo
+#Como se menciono, los parametros son los mismos tanto para el input como el output
 
 ##################################################################
 # Extract projection
+#Creamos una proyeccion permanente del raster
 ##################################################################
 print('extracting the projection for land suitability')
 extpr_dict = {
-    'INPUT': suitout,
-    'PRJ_FILE_CREATE': True
+    'INPUT': suitout, #partimos de la reproyeccion generada recien
+    'PRJ_FILE_CREATE': True #pedimos que se genere el archivo .prj
 }
 processing.run('gdal:extractprojection', extpr_dict)
 

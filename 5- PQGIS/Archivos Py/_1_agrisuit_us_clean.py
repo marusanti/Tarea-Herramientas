@@ -51,7 +51,7 @@ if not os.path.exists(junkpath): #os.path.exists sirve para chequear si la ruta 
 
 ##################################################################
 ##################################################################
-#A continuacion veremos que mcuhas de las operaciones que hacemos se realizan a 
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
 #traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
 #indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
 #parametros. Para especificar los parametros se usa un diccionario.
@@ -86,13 +86,13 @@ alg_params = {
     'MULTITHREADING': False,
     'NODATA': None,
     'OPTIONS': '',
-    'RESAMPLING': 0,
+    'RESAMPLING': 0,#se elige metodo near para reproyeccion
     'SOURCE_CRS': None,
     'TARGET_CRS': crs_wgs84,#CRS 
     'TARGET_EXTENT': None,
     'TARGET_EXTENT_CRS': None,
     'TARGET_RESOLUTION': None,
-    'OUTPUT': junkfile
+    'OUTPUT': junkfile #guardamos el archivo con el nombre junkfile
 }
 suit_proj = processing.run('gdal:warpreproject', alg_params)['OUTPUT']
 #En este caso la funcion processing.run usa el algorimo gdal:warpreproject 
