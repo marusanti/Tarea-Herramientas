@@ -57,7 +57,10 @@ if not os.path.exists(junkpath): #os.path.exists sirve para chequear si la ruta 
 #parametros. Para especificar los parametros se usa un diccionario.
 #Cada algoritmo tiene determinados parametros, aunque algunos se repiten
 #en varios casos. Por ejemplo, el parametro INPUT donde se especifica el 
-#archivo de origen para realizar las operaciones.
+#archivo de origen para realizar las operaciones. El parametro output especifica
+#el archivo de salida. No siempre vamos a guardarlo sino que a veces se coloca
+#'memory' para que quede guardado en la memoria de la computadora y podamos 
+#usarlo para otros procesos.
 #En nuestros casos, como se utilizan los mismos parametros para el algoritmo
 # inicial y final se coloca ['OUTPUT']. Si se usaran distintos parametros 
 #habria que colocar 2 diccionarios con los parametros
@@ -111,7 +114,7 @@ alg_params = {
                'HASC_2','CCN_2','CCA_2','TYPE_2',
                'ENGTYPE_2','NL_NAME_2','VARNAME_2'],#columnas a eliminar
     'INPUT': adm2in,#base de la que partimos
-    'OUTPUT': 'memory:'
+    'OUTPUT': 'memory:'#guardamos en la memoria
 }
 counties_fields_dropped = processing.run('qgis:deletecolumn', alg_params)['OUTPUT']
 
@@ -124,11 +127,11 @@ counties_fields_dropped = processing.run('qgis:deletecolumn', alg_params)['OUTPU
 print('adding unique ID to county data')
 alg_params = {
     'FIELD_NAME': 'cid', #nombre del nuevo campo
-    'GROUP_FIELDS': [''],
+    'GROUP_FIELDS': [''],#esto sirve para agrupar por algun campo. En este caso no agrupamos
     'INPUT': counties_fields_dropped, #base de la que partimos
     'SORT_ASCENDING': True, #orden ascendente
     'SORT_EXPRESSION': '',
-    'SORT_NULLS_FIRST': False,
+    'SORT_NULLS_FIRST': False,#indicamos que no ordenamos los valores nulos
     'START': 1, #indica que se empiece a contar a partir del numero 1
     'OUTPUT': 'memory:'
 }
