@@ -1,9 +1,9 @@
 library(foreign)
 library(tidyverse)
-base1<-read.dta("city_level_panel_for_web.dta")
-base2<-read.dta("country_level_panel_for_web.dta")
-base3<-read.dta("Europe_only_city_level_panel_for_web.dta")
-base4<-read.dta("France_heights_for_web.dta")
+base1<-read.dta("../../city_level_panel_for_web.dta")
+base2<-read.dta("../../country_level_panel_for_web.dta")
+base3<-read.dta("../../Europe_only_city_level_panel_for_web.dta")
+base4<-read.dta("../../France_heights_for_web.dta")
 
 write.csv(base1,"city_level_panel_for_web.csv",row.names = F)
 write.csv(base2,"Country_level_panel_for_web.csv",row.names = F)
