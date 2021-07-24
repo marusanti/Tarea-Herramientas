@@ -30,16 +30,16 @@
 #########################################################################################
 #########################################################################################
 
-# Seteamos directorios a inputs
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-wldsin = "{}/langa.shp".format(mainpath)
-outpath = "{}/_output/".format(mainpath)
-wldsout = "{}/wlds_cleaned.shp".format(outpath)
-
+# Seteamos directorios de inputs y outputs
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" #carpeta donde estan los inputs
+wldsin = "{}/langa.shp".format(mainpath) #archivo input
+outpath = "{}/_output/".format(mainpath)#carpeta para outputs 
+wldsout = "{}/wlds_cleaned.shp".format(outpath) #archivo output
 if not os.path.exists(outpath):  #Chequeo si el directorio existe o no
 	os.mkdir(outpath) #Si no existe la ruta, genero el directorio
+#OS module en Python provee funciones para interactuar con el sistema operativo
 
-#A continuacion veremos que mcuhas de las operaciones que hacemos se realizan a 
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
 #traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
 #indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
 #parametros. Para especificar los parametros se usa un diccionario.
@@ -104,6 +104,7 @@ field_calc = processing.run('qgis:fieldcalculator', fc_dict)['OUTPUT']
 
 #########################################################
 # Drop field(s)
+# Se quitan campos innecesarios de la base recién generada
 #########################################################
 print('dropping fields except GID, ID, lnm')
 #queremos eliminar todos los campos excepto los mencionados en keepfields
@@ -114,7 +115,7 @@ dropfields = [field for field in allfields if field not in keepfields]
 df3_dict = {
    'COLUMN': dropfields,#columnas a eliminar
    'INPUT': field_calc,#partimos de ultimo archivo generado
-   'OUTPUT': wldsout #guardamos este archivo con el nombre de wldsout 
+   'OUTPUT': wldsout #guardamos este archivo con el nombre de wldsout ya que antes definimos la ruta para el archivo con este nombre
 }
 processing.run('qgis:deletecolumn', df3_dict)
 

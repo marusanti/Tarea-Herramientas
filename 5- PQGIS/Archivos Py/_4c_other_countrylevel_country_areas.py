@@ -30,29 +30,50 @@
 #########################################################################################
 #########################################################################################
 
-# set paths to inputs and outputs
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-admin_in = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath)
-areas_out = "{}/_output/country_areas.csv".format(mainpath)
+# Setear directorios de inputs y outputs
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" #carpeta de inputs
+admin_in = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath) #input
+areas_out = "{}/_output/country_areas.csv".format(mainpath)#output
+
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
+#traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
+#indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
+#parametros. Para especificar los parametros se usa un diccionario.
+#Cada algoritmo tiene determinados parametros, aunque algunos se repiten
+#en varios casos. Por ejemplo, el parametro INPUT donde se especifica el 
+#archivo de origen para realizar las operaciones. El parametro output especifica
+#el archivo de salida. No siempre vamos a guardarlo sino que a veces se coloca
+#'memory' para que quede guardado en la memoria de la computadora y podamos 
+#usarlo para otros procesos.
+#En nuestros casos, como se utilizan los mismos parametros para el algoritmo
+# inicial y final se coloca ['OUTPUT']. Si se usaran distintos parametros 
+#habria que colocar 2 diccionarios con los parametros
 
 # defining world cylindrical equal area SR
 crs_wcea = QgsCoordinateReferenceSystem('ESRI:54034')
 
 ##################################################################
 # Drop field(s)
+# Se quitan campos innecesarios de la base de estados
+#En este caso la funcion processing.run usa el algorimo qgis:deletecolumn 
+#para eliminar los campos que se detallan en dropfields. Se busca eliminar
+#todos los campos excepto los mencionados en keepfields
+
 ##################################################################
 print('dropping unnecessary fields')
 
 # making a layer so we can get all attribute fields
 worldlyr = QgsVectorLayer(admin_in, 'ogr')
 allfields = [field.name() for field in worldlyr.fields()]
-keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3']
+keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3'] #lista de campos 
+#for para mantener los campos que no estan en keepfields ya que son los que
+#queremos eliminar luego
 dropfields = [field for field in allfields if field not in keepfields]
 
 drop_dict = {
-    'COLUMN': dropfields,
-    'INPUT': admin_in,
-    'OUTPUT': 'memory:'
+    'COLUMN': dropfields,#columnas a eliminar
+    'INPUT': admin_in,#base de estados de la que partimos
+    'OUTPUT': 'memory:'#guardamos en la memoria
 }
 countries_drop_fields = processing.run('qgis:deletecolumn', drop_dict)['OUTPUT']
 
@@ -61,35 +82,37 @@ countries_drop_fields = processing.run('qgis:deletecolumn', drop_dict)['OUTPUT']
 ##################################################################
 print('projecting to world cylindical equal area')
 reproj_dict = {
-    'INPUT': countries_drop_fields,
-    'TARGET_CRS': crs_wcea,
-    'OUTPUT': 'memory:'
+    'INPUT': countries_drop_fields,#partimos de base recien generada
+    'TARGET_CRS': crs_wcea, #CRS elegida
+    'OUTPUT': 'memory:' #guardamos en la memoria
 }
 countries_reprojected = processing.run('native:reprojectlayer', reproj_dict)['OUTPUT']
 
 ##################################################################
 # Fix geometries
+#Corregimos geometrias
 ##################################################################
 print('fixing geometries')
 fixgeo_dict = {
-    'INPUT': countries_reprojected,
-    'OUTPUT': 'memory:'
+    'INPUT': countries_reprojected,#partimos de base recien generada
+    'OUTPUT': 'memory:'#guardamos en la memoria
 }
 countries_fix_geo = processing.run('native:fixgeometries', fixgeo_dict)['OUTPUT']
 
 ##################################################################
 # Field calculator, output to csv
+#Calculamos el area del poligono y exportamos la base como csv
 ##################################################################
 print('calculating country areas')
 fcalc_dict = {
     'FIELD_LENGTH': 10,
-    'FIELD_NAME': 'km2area',
-    'FIELD_PRECISION': 3,
-    'FIELD_TYPE': 0,
-    'FORMULA': 'area($geometry)/1000000',
-    'INPUT': countries_fix_geo,
-    'NEW_FIELD': True,
-    'OUTPUT': areas_out
+    'FIELD_NAME': 'km2area',#nombre del nuevo campo
+    'FIELD_PRECISION': 3,#especificamos 3 decimales 
+    'FIELD_TYPE': 0, #especifamos tipo de campo como float
+    'FORMULA': 'area($geometry)/1000000', #la formula para calcular el area del poligono
+    'INPUT': countries_fix_geo,#partimos de base recien generada
+    'NEW_FIELD': True,#especificamos que generamos un nuevo campo
+    'OUTPUT': areas_out #guardamos como areas_out, esta especificada la ruta en la parte donde fijamos directorios
 }
 processing.run('qgis:fieldcalculator', fcalc_dict)
 

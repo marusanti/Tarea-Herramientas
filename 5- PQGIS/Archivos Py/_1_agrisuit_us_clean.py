@@ -1,6 +1,8 @@
 ##Objetivo: construir un mapa que muestre la idoneidad agricola media de los 
 #condados de EEUU
+import pip
 
+pip.main(['install', 'qgis'])
 #Importacion de librerias
 print('preliminary setup')
 import sys
@@ -16,7 +18,8 @@ from qgis.analysis import QgsNativeAlgorithms
 
 # Ver https://gis.stackexchange.com/a/155852/4972 para detalles del prefijo 
 #Ruta de la ubicacion de qgis 
-QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+QgsApplication.setPrefixPath('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/QGIS 3.16.8')
+#QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
 #Seteamos falso
 qgs = QgsApplication([], False)
 qgs.initQgis()
@@ -32,26 +35,33 @@ QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 ##################################################################
 ##################################################################
 
-# Setear rutas de inputs and outputs
-#OS module en Python provee funciones para interactuar con el sistema operativo
+# Setear rutas de inputs y outputs
 #Se utiliza un condicional para que si no existe la ruta descripta, se cree una
 # NOTA: si se corre el script directo desde la linea de comando, se puede especificar
 #rutas relativas, e.g. mainpath = "../gis_data", pero no funciona con la consola
 #de python en QGIS
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-suitin = "{}/suit/suit/hdr.adf".format(mainpath)
-adm2in = "{}/USA_adm_shp/USA_adm2.shp".format(mainpath)
-outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)
-junkpath = "{}/_output/junk".format(mainpath)
-junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)
+mainpath = "C:/Users/mb_sa/Documents/Maru/Maestría/II trimestre/Herramientas computacionales/PQGIS/input"
+suitin = "{}/hdr.adf".format(mainpath)#archivo input
+adm2in = "{}/USA_adm2.shp".format(mainpath)#archivo input
+outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)#archivo output
+junkpath = "{}/_output/junk".format(mainpath)#archivo output
+junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)#archivo output
+
+#mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"#carpeta general de inputs
+#suitin = "{}/suit/suit/hdr.adf".format(mainpath)#archivo input
+#adm2in = "{}/USA_adm_shp/USA_adm2.shp".format(mainpath)#archivo input
+#outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)#archivo output
+#junkpath = "{}/_output/junk".format(mainpath)#archivo output
+#junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)#archivo output
 if not os.path.exists(mainpath + "/_output"):
     os.mkdir(mainpath + "/_output")
 if not os.path.exists(junkpath): #os.path.exists sirve para chequear si la ruta existe o no
     os.mkdir(junkpath) #mkdir sirve para crear directorio
+#OS module en Python provee funciones para interactuar con el sistema operativo
 
 ##################################################################
 ##################################################################
-#A continuacion veremos que mcuhas de las operaciones que hacemos se realizan a 
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
 #traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
 #indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
 #parametros. Para especificar los parametros se usa un diccionario.
@@ -86,13 +96,13 @@ alg_params = {
     'MULTITHREADING': False,
     'NODATA': None,
     'OPTIONS': '',
-    'RESAMPLING': 0,
+    'RESAMPLING': 0,#se elige metodo near para reproyeccion
     'SOURCE_CRS': None,
     'TARGET_CRS': crs_wgs84,#CRS 
     'TARGET_EXTENT': None,
     'TARGET_EXTENT_CRS': None,
     'TARGET_RESOLUTION': None,
-    'OUTPUT': junkfile
+    'OUTPUT': junkfile #guardamos el archivo con el nombre junkfile
 }
 suit_proj = processing.run('gdal:warpreproject', alg_params)['OUTPUT']
 #En este caso la funcion processing.run usa el algorimo gdal:warpreproject 
@@ -160,8 +170,10 @@ processing.run('native:zonalstatistics', alg_params)
 # Exportar data final como csv
 ###################################################################
 print('outputting the data')
-
-with open(outpath, 'w') as output_file:
+#abrimos outpath que es el archivo que generamos cuando seteamos directorio
+#y lo rellenamos con la informacion que queremos exportar
+#\n sirve para desplazar una linea
+with open(outpath, 'w') as output_file: #
     fieldnames = [field.name() for field in counties_fields_autoid.fields()]
     line = ','.join(name for name in fieldnames) + '\n'
     output_file.write(line)
