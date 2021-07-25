@@ -1,74 +1,82 @@
-#########################################################################################
-#########################################################################################
-# SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
+#Objetivo: Limpiamos la base de países
+ SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
 # NOT NECESSARY IF YOU ARE RUNNING THIS INSIDE THE QGIS GUI.
-# print('preliminary setup')
-# import sys
-# import os
+#Importacion de librerias
+ print('preliminary setup')
+ import sys
+ import os
 
-# from qgis.core import (
-#     QgsApplication
-# )
+ from qgis.core import (
+     QgsApplication, 
+     QgsVectorLayer,
+     QgsCoordinateReferenceSystem,
+ )
 
-# from qgis.analysis import QgsNativeAlgorithms
+ from qgis.analysis import QgsNativeAlgorithms
 
 # # See https://gis.stackexchange.com/a/155852/4972 for details about the prefix 
-# QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
-# qgs = QgsApplication([], False)
-# qgs.initQgis()
+#Ruta de la ubicacion de qgis 
+ QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+ qgs = QgsApplication([], False)
+ qgs.initQgis()
 
-# # Add the path to Processing framework  
-# sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
+#Ruta del marco de procesamiento 
+ sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
 
-# # Import and initialize Processing framework
-# import processing
-# from processing.core.Processing import Processing
-# Processing.initialize()
-# QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
+# Importar e iniciar marco de procesamiento
+ import processing
+ from processing.core.Processing import Processing
+ Processing.initialize()
+ QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
-#########################################################################################
 
-# set paths to inputs and outputs
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-outpath = "{}/_output".format(mainpath)
+# Setear carpetas de inputs a partir de objeto
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" #carpeta donde estan los inputs
+outpath = "{}/_output/".format(mainpath)#carpeta para outputs pero que también guardar inputs que son outputs de código anterior
 
-elevation = "D:/backup_school/Research/IPUMS/_GEO/elrug/elevation/alt.bil"
-tpbasepath = "D:/backup_school/Research/worldclim/World"
-tpath = tpbasepath + "/temperature"
-ppath = tpbasepath + "/precipitation"
-temp = tpath + "/TOTtmean6090.tif"
-prec = ppath + "/TOTprec6090.tif"
-landqual = outpath + "/landquality.tif"
-popd1500 = mainpath + "/HYDE/1500ad_pop/popd_1500AD.asc"
-popd1990 = mainpath + "/HYDE/1990ad_pop/popd_1990AD.asc"
-popd2000 = mainpath + "/HYDE/2000ad_pop/popd_2000AD.asc"
-countries = mainpath + "/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp"
+#Input
+#elevation = "D:/backup_school/Research/IPUMS/_GEO/elrug/elevation/alt.bil"
+#tpbasepath = "D:/backup_school/Research/worldclim/World"
+#tpath = tpbasepath + "/temperature"
+#ppath = tpbasepath + "/precipitation"
+#temp = tpath + "/TOTtmean6090.tif"
+#prec = ppath + "/TOTprec6090.tif"
+#landqual = outpath + "/landquality.tif" #output de código anterior
+#popd1500 = mainpath + "/HYDE/1500ad_pop/popd_1500AD.asc" #data de poblacion
+#popd1990 = mainpath + "/HYDE/1990ad_pop/popd_1990AD.asc"#data de poblacion
+#popd2000 = mainpath + "/HYDE/2000ad_pop/popd_2000AD.asc"#data de poblacion
+countries = mainpath + "/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp" #shapefile de países
 
-outcsv = "{}/country_level_zs.csv".format(outpath)
+#output
+outcsv = "{}/country_level_zs.csv".format(outpath) #csv
 
-RASTS = [elevation, temp, prec, landqual, popd1500, popd1990, popd2000]
-PREFS = ['elev_', 'temp_', 'prec_', 'lqua_', 'pd15_', 'pd19_', 'pd20_']
-
-# elevation, temperature, precipitation are very large raster files,
-# take a long time to process. we will see faster processing methods at the end. 
-# the code will still run (if you are patient)!
-# for now, do only the last four rasters
-RASTS = RASTS[3:]
-PREFS = PREFS[3:]
-
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
+#traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
+#indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
+#parametros. Para especificar los parametros se usa un diccionario.
+#Cada algoritmo tiene determinados parametros, aunque algunos se repiten
+#en varios casos. Por ejemplo, el parametro INPUT donde se especifica el 
+#archivo de origen para realizar las operaciones. El parametro output especifica
+#el archivo de salida. No siempre vamos a guardarlo sino que a veces se coloca
+#'memory' para que quede guardado en la memoria de la computadora y podamos 
+#usarlo para otros procesos.
+#En nuestros casos, como se utilizan los mismos parametros para el algoritmo
+# inicial y final se coloca ['OUTPUT']. Si se usaran distintos parametros 
+#habria que colocar 2 diccionarios con los parametros
 ##################################################################
 # Fix geometries
-##################################################################
+#Arreglamos la geometría
+
 print('fixing geometries')
 fixgeo_dict = {
     'INPUT': countries,
     'OUTPUT': 'memory:'
 }
-fix_geo = processing.run('native:fixgeometries', fixgeo_dict)['OUTPUT']
+fix_geo = processing.run('native:fixgeometries', fixgeo_dict)['OUTPUT'] #guardamos como fix_geo
 
 ##################################################################
 # Drop field(s)
-##################################################################
+#eliminamos todas las variables que no estén en el objeto keepfields
 print('dropping unnecessary fields')
 allfields = [field.name() for field in fix_geo.fields()]
 keepfields = ['ADMIN', 'ISO_A3']
@@ -77,35 +85,15 @@ dropfields = [field for field in allfields if field not in keepfields]
 drop_dict = {
     'COLUMN': dropfields,
     'INPUT': fix_geo,
-    'OUTPUT': 'memory:'
+    'OUTPUT': 'memory:' #primero guardamos en la memoria
 }
-drop_fields = processing.run('qgis:deletecolumn', drop_dict)['OUTPUT']
-
-# here we loop over the rasters
-for idx, rast in enumerate(RASTS):
-
-	pref = PREFS[idx]
-
-	# not needed, can use rast directly as 'INPUT_RASTER' for zs
-	# rlayer = QgsRasterLayer(rast, "rasterlayer", "gdal")
-
-	###################################################################
-	# Zonal statistics
-	###################################################################
-	print('computing zonal stats {}'.format(pref))
-	zs_dict = {
-	    'COLUMN_PREFIX': pref,
-	    'INPUT_RASTER': rast,
-	    'INPUT_VECTOR': drop_fields,
-	    'RASTER_BAND': 1,
-	    'STATS': [2]
-	}
-	processing.run('qgis:zonalstatistics', zs_dict)
+drop_fields = processing.run('qgis:deletecolumn', drop_dict)['OUTPUT']#guardamos como drop_fields
 
 ###################################################################
-# write to CSV
-###################################################################
+# Exportar data final como csv
 print('outputting the data')
+#abrimos outpath que es el objeto que generamos para guardar el csv cuando seteamos directorio.
+#Lo rellenamos con la informacion de drop_fields con la que trabajamos
 
 with open(outcsv, 'w') as output_file:
     fieldnames = [field.name() for field in drop_fields.fields()]
