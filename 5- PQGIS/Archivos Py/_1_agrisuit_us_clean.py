@@ -1,8 +1,7 @@
 ##Objetivo: construir un mapa que muestre la idoneidad agricola media de los 
 #condados de EEUU
-import pip
-
-pip.main(['install', 'qgis'])
+#import pip
+#pip.main(['install', 'qgis'])
 #Importacion de librerias
 print('preliminary setup')
 import sys
@@ -18,8 +17,7 @@ from qgis.analysis import QgsNativeAlgorithms
 
 # Ver https://gis.stackexchange.com/a/155852/4972 para detalles del prefijo 
 #Ruta de la ubicacion de qgis 
-QgsApplication.setPrefixPath('C:/ProgramData/Microsoft/Windows/Start Menu/Programs/QGIS 3.16.8')
-#QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
 #Seteamos falso
 qgs = QgsApplication([], False)
 qgs.initQgis()
@@ -32,27 +30,25 @@ import processing
 from processing.core.Processing import Processing
 Processing.initialize()
 QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
-##################################################################
+
 ##################################################################
 
-# Setear rutas de inputs y outputs
+# Setear carpetas de inputs a partir de objetos
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"#carpeta general de inputs
+
+# Inputs
+suitin = "{}/suit/suit/hdr.adf".format(mainpath)#archivo input
+adm2in = "{}/USA_adm_shp/USA_adm2.shp".format(mainpath)#archivo input
+
+# Output
+outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)#archivo output csv
+junkpath = "{}/_output/junk".format(mainpath)#output temporal
+junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)#archivo output temporal
+
 #Se utiliza un condicional para que si no existe la ruta descripta, se cree una
 # NOTA: si se corre el script directo desde la linea de comando, se puede especificar
 #rutas relativas, e.g. mainpath = "../gis_data", pero no funciona con la consola
 #de python en QGIS
-mainpath = "C:/Users/mb_sa/Documents/Maru/Maestría/II trimestre/Herramientas computacionales/PQGIS/input"
-suitin = "{}/hdr.adf".format(mainpath)#archivo input
-adm2in = "{}/USA_adm2.shp".format(mainpath)#archivo input
-outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)#archivo output
-junkpath = "{}/_output/junk".format(mainpath)#archivo output
-junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)#archivo output
-
-#mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"#carpeta general de inputs
-#suitin = "{}/suit/suit/hdr.adf".format(mainpath)#archivo input
-#adm2in = "{}/USA_adm_shp/USA_adm2.shp".format(mainpath)#archivo input
-#outpath = "{}/_output/counties_agrisuit.csv".format(mainpath)#archivo output
-#junkpath = "{}/_output/junk".format(mainpath)#archivo output
-#junkfile = "{}/_output/junk/agrisuit.tif".format(mainpath)#archivo output
 if not os.path.exists(mainpath + "/_output"):
     os.mkdir(mainpath + "/_output")
 if not os.path.exists(junkpath): #os.path.exists sirve para chequear si la ruta existe o no
@@ -76,14 +72,14 @@ if not os.path.exists(junkpath): #os.path.exists sirve para chequear si la ruta 
 #habria que colocar 2 diccionarios con los parametros
 
 # Definiendo WGS 84 SR
-#Objetos de Coordinate reference system (CRS) definen una proyeccion espeifica
+#Objetos de Coordinate reference system (CRS) definen una proyeccion especifica
 # de mapa, como tambien transformaciones entre diferentes CRS
 crs_wgs84 = QgsCoordinateReferenceSystem("epsg:4326")
-##################################################################
-###################### Warp (reproject)###########################
+
+################################################
+# Warp (reproject)
 #Reproyectar una capa raster a otro CRS, en este caso a las proyecciones
 #que definimos en crs_wgs84
-##################################################################
 # note: Warp does not accept memory output
 # could also specify: 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
 # this will create new files in your OS temp directory (in my (Windows) case:
@@ -102,22 +98,21 @@ alg_params = {
     'TARGET_EXTENT': None,
     'TARGET_EXTENT_CRS': None,
     'TARGET_RESOLUTION': None,
-    'OUTPUT': junkfile #guardamos el archivo con el nombre junkfile
+    'OUTPUT': junkfile #guardamos el archivo en el objeto junkfile
 }
-suit_proj = processing.run('gdal:warpreproject', alg_params)['OUTPUT']
+suit_proj = processing.run('gdal:warpreproject', alg_params)['OUTPUT'] 
 #En este caso la funcion processing.run usa el algorimo gdal:warpreproject 
 #para reproyectar la capa raster a otro CRS 
 #Utiliza los parametros definidos en alg_params especificos para este algoritmo
 #Como se menciono, los parametros son los mismos tanto para el input como el output
 
-##################################################################
-#######################Drop fields################################
+######################################################
+#Drop fields
 # Se quitan campos innecesarios de la base de estados
 #En este caso la funcion processing.run usa el algorimo qgis:deletecolumn 
 #para eliminar los campos que se detallan en alg_params.
-#La lista de campos a eliminar se detalla entre [] Por ejemplo ISO, ID_O
+#La lista de campos a eliminar se detalla entre [], Por ejemplo ISO, ID_O
 #El imput es adm2in ya que refiere a la ruta de la base de estados
-##################################################################
 print('dropping fields from the county data')
 alg_params = {
     'COLUMN': [' ISO','ID_0','NAME_0','ID_1','ID_2',
@@ -126,14 +121,13 @@ alg_params = {
     'INPUT': adm2in,#base de la que partimos
     'OUTPUT': 'memory:'#guardamos en la memoria
 }
-counties_fields_dropped = processing.run('qgis:deletecolumn', alg_params)['OUTPUT']
+counties_fields_dropped = processing.run('qgis:deletecolumn', alg_params)['OUTPUT']#output de eliminar las columnas 
 
-###################################################################
-##################Add autoincremental field########################
+########################################
+#Add autoincremental field#
 # Se agrega un campo cid que sera un numero que identifique al estado
 #En este caso la funcion processing.run usa el algorimo native:addautoincrementalfield
 #para agregar el campo cid. El input es la salida anterior (counties_fields_dropped)
-###################################################################
 print('adding unique ID to county data')
 alg_params = {
     'FIELD_NAME': 'cid', #nombre del nuevo campo
@@ -147,15 +141,14 @@ alg_params = {
 }
 counties_fields_autoid = processing.run('native:addautoincrementalfield', alg_params)['OUTPUT']
 
-###################################################################
-#######################Zonal statistics############################
+##################################################
+#Zonal statistics
 # Se calcula la media de la idoneidad agricola por estado
 #Nota: la media se calcula a partir de los pixeles del raster que se encuentran
 #dentro de los estados
 #En este caso la funcion processing.run usa el algorimo ative:zonalstatistics
 # que sirve para hacer calculos por zona
 #El input es suit_proj que es la base reproyectada que creamos
-###################################################################
 print('computing zonal stats')
 alg_params = {
     'COLUMN_PREFIX': '_',#prefijo para el nombre de la nueva columna
@@ -168,14 +161,12 @@ processing.run('native:zonalstatistics', alg_params)
 
 ###################################################################
 # Exportar data final como csv
-###################################################################
 print('outputting the data')
-#abrimos outpath que es el archivo que generamos cuando seteamos directorio
-#y lo rellenamos con la informacion que queremos exportar
-#\n sirve para desplazar una linea
-with open(outpath, 'w') as output_file: #
-    fieldnames = [field.name() for field in counties_fields_autoid.fields()]
-    line = ','.join(name for name in fieldnames) + '\n'
+#abrimos outpath que es el objeto que generamos para guardar el csv cuando seteamos directorio.
+#Lo rellenamos con la informacion de counties_fields_autoid con la que trabajamos
+with open(outpath, 'w') as output_file: 
+    fieldnames = [field.name() for field in counties_fields_autoid.fields()]# usamos datos de counties_fields_autood
+    line = ','.join(name for name in fieldnames) + '\n' #\n sirve para desplazar una linea
     output_file.write(line)
     for f in counties_fields_autoid.getFeatures():
         line = ','.join(str(f[name]) for name in fieldnames) + '\n'

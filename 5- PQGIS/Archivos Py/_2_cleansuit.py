@@ -1,39 +1,43 @@
-#########################################################################################
-#########################################################################################
-# SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
+#Objetivo: Exportar un .tif de landquality en base a un .adf
+ SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
 # NOT NECESSARY IF YOU ARE RUNNING THIS INSIDE THE QGIS GUI.
-# print('preliminary setup')
-# import sys
-# import os
+#Importacion de librerias
+ print('preliminary setup')
+ import sys
+ import os
 
-# from qgis.core import (
-#     QgsApplication, 
-#     QgsVectorLayer,
-#     QgsCoordinateReferenceSystem,
-# )
+ from qgis.core import (
+     QgsApplication, 
+     QgsVectorLayer,
+     QgsCoordinateReferenceSystem,
+ )
 
-# from qgis.analysis import QgsNativeAlgorithms
+ from qgis.analysis import QgsNativeAlgorithms
 
 # # See https://gis.stackexchange.com/a/155852/4972 for details about the prefix 
-# QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
-# qgs = QgsApplication([], False)
-# qgs.initQgis()
+#Ruta de la ubicacion de qgis 
+ QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+ qgs = QgsApplication([], False)
+ qgs.initQgis()
 
-# # Add the path to Processing framework  
-# sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
+#Ruta del marco de procesamiento 
+ sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
 
-# # Import and initialize Processing framework
-# import processing
-# from processing.core.Processing import Processing
-# Processing.initialize()
-# QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
+# Importar e iniciar marco de procesamiento
+ import processing
+ from processing.core.Processing import Processing
+ Processing.initialize()
+ QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
-#########################################################################################
 
-# Seteamos rutas de inputs y outpus
+# Setear carpetas de inputs a partir de objetos
 mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"#carpeta general de inputs
+outpath = "{}/_output/".format(mainpath)#carpeta para outputs pero que también guardar inputs que son outputs de código anterior
+
+#Inputs
 suitin = "{}/suit/suit/hdr.adf".format(mainpath)#archivo input
-outpath = "{}/_output/".format(mainpath)#carpeta para guardar outputs
+
+#Output
 suitout = "{}/landquality.tif".format(outpath) #archivo output
 
 #A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
@@ -57,7 +61,6 @@ crs_wgs84 = QgsCoordinateReferenceSystem("epsg:4326")
 # Warp (reproject)
 #Reproyectar una capa raster a otro CRS, en este caso a las proyecciones
 #que definimos en crs_wgs84
-##################################################################
 # note: Warp does not accept memory output
 # could also specify: 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
 # this will create new files in your OS temp directory (in my (Windows) case:
@@ -76,7 +79,7 @@ warp_dict = {
     'TARGET_EXTENT': None,
     'TARGET_EXTENT_CRS': None,
     'TARGET_RESOLUTION': None,
-    'OUTPUT': suitout
+    'OUTPUT': suitout #nombre del output
 }
 processing.run('gdal:warpreproject', warp_dict)
 #En este caso la funcion processing.run usa el algorimo gdal:warpreproject 
@@ -87,7 +90,6 @@ processing.run('gdal:warpreproject', warp_dict)
 ##################################################################
 # Extract projection
 #Creamos una proyeccion permanente del raster
-##################################################################
 print('extracting the projection for land suitability')
 extpr_dict = {
     'INPUT': suitout, #partimos de la reproyeccion generada recien

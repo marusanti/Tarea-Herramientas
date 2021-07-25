@@ -1,4 +1,4 @@
-##Objetivo: Cuantificar número de lenguajes por país
+##Objetivo: Obtener centroides y distancias a la costa de todos los países
 
 #Importacion de librerias
 print('preliminary setup')
@@ -26,24 +26,22 @@ Processing.initialize()
 QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
 
-# Setear carpetas de inputs
-mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input"
-outpath = "{}/_output".format(mainpath)
-junkpath = "{}/junk".format(outpath)
+# Setear carpetas de inputs a partir de objeto
+mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" #carpeta donde estan los inputs
+outpath = "{}/_output/".format(mainpath)#carpeta para outputs pero que también guardar inputs que son outputs de código anterior
 
 # Inputs. Los mainpath son de archivos de input data, mientras que los de outpath son outputs de códigos anteriores
-
 coastin = "{}/ne_10m_coastline/ne_10m_coastline.shp".format(mainpath) #shapefile de costas
 adminin = "{}/ne_10m_admin_0_countries/ne_10m_admin_0_countries.shp".format(mainpath) #shapefile de países
 
 # Outputs
-
+junkpath = "{}/junk".format(outpath) #archivos temporales
 coastout = "{}/coast.shp".format(junkpath) #shapefile de costas maritimas
 centroidsout = "{}/centroids.shp".format(junkpath) #shapefile de centroides de países
-distout = "{}/distance.shp".format(junkpath) 
-nearout = "{}/nearest.shp".format(junkpath)
+distout = "{}/distance.shp".format(junkpath) #shapefile de lineas verticales de centroides a la costa 
+nearout = "{}/nearest.shp".format(junkpath) #shapefiles de puntos costeros más cercanos al centroide
 testout = "{}/testout.shp".format(junkpath)
-csvout = "{}/centroids_closest_coast.csv".format(outpath)
+csvout = "{}/centroids_closest_coast.csv".format(outpath) #csv final
 
 #OS module en Python provee funciones para interactuar con el sistema operativo
 #Se utiliza un condicional para que si no existe la ruta descripta, se cree una
@@ -53,6 +51,20 @@ csvout = "{}/centroids_closest_coast.csv".format(outpath)
 
 if not os.path.exists(junkpath):
     os.mkdir(junkpath)
+
+#A continuacion veremos que muchas de las operaciones que hacemos se realizan a 
+#traves de la funcion processing.run(). Es una funcion cuyo primer parametro 
+#indica el nombre del algoritmo que se quiere utilizar y el segundo indica sus
+#parametros. Para especificar los parametros se usa un diccionario.
+#Cada algoritmo tiene determinados parametros, aunque algunos se repiten
+#en varios casos. Por ejemplo, el parametro INPUT donde se especifica el 
+#archivo de origen para realizar las operaciones. El parametro output especifica
+#el archivo de salida. No siempre vamos a guardarlo sino que a veces se coloca
+#'memory' para que quede guardado en la memoria de la computadora y podamos 
+#usarlo para otros procesos.
+#En nuestros casos, como se utilizan los mismos parametros para el algoritmo
+# inicial y final se coloca ['OUTPUT']. Si se usaran distintos parametros 
+#habria que colocar 2 diccionarios con los parametros
 
 # #########################################################################
 # # Fix geometries
@@ -72,13 +84,13 @@ if not os.path.exists(junkpath):
  }
  fixgeo_countries = processing.run('native:fixgeometries', fg2_dict)['OUTPUT']
 
-
 # # Centroids
-# Obtener los centroides de los países (la función devuelve el centro geográfico, no las capitales nacionales) y lo guardamos como country_centroids
+# Obtener los centroides de los países (la función devuelve el centro geográfico, 
+#no las capitales nacionales) y lo guardamos como country_centroids
 print('finding country centroids')
  cts_dict = {
      'ALL_PARTS': False,
-     'INPUT': fixgeo_countries,
+     'INPUT': fixgeo_countries, #input de codigo anterior
      'OUTPUT': 'memory:'
  }
  country_centroids = processing.run('native:centroids', cts_dict)['OUTPUT']
@@ -97,7 +109,7 @@ centroids_with_coordinates = processing.run('qgis:exportaddgeometrycolumns', aga
 # nos quedamos solo con la información de fixgeo_coast que necesitamos y guardamos como coastout
  print('dropping unnecessary fields, coast')
  allfields = [field.name() for field in fixgeo_coast.fields()]
- keepfields = ['featurecla']
+ keepfields = ['featurecla']#variables que no borramos
  dropfields = [field for field in allfields if field not in keepfields]
 
  df1_dict = {
@@ -107,11 +119,11 @@ centroids_with_coordinates = processing.run('qgis:exportaddgeometrycolumns', aga
  }
  processing.run('qgis:deletecolumn', df1_dict)
 
-# nos quedamos solo con la información de entroids_with_coordinates que necesitamos y guardamos como centroids_out
+# nos quedamos solo con la información de centroids_with_coordinates que necesitamos y guardamos como centroids_out
 
  print('dropping unnecessary fields, countries')
  allfields = [field.name() for field in centroids_with_coordinates.fields()]
- keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3', 'xcoord', 'ycoord']
+ keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3', 'xcoord', 'ycoord']#variables que no borramos
  dropfields = [field for field in allfields if field not in keepfields]
 
 # df2_dict = {
@@ -127,17 +139,17 @@ centroids_with_coordinates = processing.run('qgis:exportaddgeometrycolumns', aga
 #guardamos como nearout al punto más cercano y como distout a la distancia entre ese punto y el centroide 
 print('vector distance')
 vd_dict = {
-    'from': centroidsout,
+    'from': centroidsout, #extremo incial de la línea
     'from_type': [0],
-    'to': coastout,
+    'to': coastout, #extremo final de la línea
     'to_type': [1],
     'dmax': -1,
     'dmin': -1,
     'upload': [1],
     'column': ['xcoord'],
     'to_column': None,
-    'from_output': nearout,
-    'output': distout, 
+    'from_output': nearout, #nos quedamos con los puntos costeros, parte del uutput
+    'output': distout,  #el output es la distancia
     'GRASS_REGION_PARAMETER': None,
     'GRASS_SNAP_TOLERANCE_PARAMETER': -1,
     'GRASS_MIN_AREA_PARAMETER': 0.0001,
@@ -149,26 +161,26 @@ vd_dict = {
 processing.run('grass7:v.distance', vd_dict)
 
 # # Field calculator
-#solo nos quedamos con los primeros 4 caracteres?
+#le restamos uno a nearout para que tengan sentido los valores
+#guardamos como nearest_cat_adjust
  print('adjusting the "cat" field in the nearest centroids to merge with distance lines')
  fc1_dict = {
-     'FIELD_LENGTH': 4,
-     'FIELD_NAME': 'cat',
-     'FIELD_PRECISION': 3,
-     'FIELD_TYPE': 1,
-     'FORMULA': 'attribute($currentfeature, \'cat\')-1',
-     'INPUT': nearout,
+     'FIELD_LENGTH': 4,#largo del nombre
+     'FIELD_NAME': 'cat',#nombre de la variable
+     'FIELD_PRECISION': 3,#especificamos 3 decimales 
+     'FIELD_TYPE': 1,#integer
+     'FORMULA': 'attribute($currentfeature, \'cat\')-1',#formula de restarle 1
+     'INPUT': nearout,#input
      'NEW_FIELD': False,
      'OUTPUT': 'memory:'
  }
  nearest_cat_adjust = processing.run('qgis:fieldcalculator', fc1_dict)['OUTPUT']
 
-
 # # Drop field(s)
-# Borramos las variables innecesarias de nearest_cat_adjust
+# Borramos las variables innecesarias dentro del objeto nearest_cat_adjust
  print('dropping unnecessary fields, nearest (the co-ordinates get screwed up')
  df3_dict = {
-     'COLUMN': ['xcoord', 'ycoord'],
+     'COLUMN': ['xcoord', 'ycoord'],#solo nos quedamos con las coordenadas
      'INPUT': nearest_cat_adjust,
      'OUTPUT': 'memory:'
  }
@@ -176,14 +188,15 @@ processing.run('grass7:v.distance', vd_dict)
 
 # # Join attributes by field value
 # Mergeamos data de controides (centroidsout) con punto costero más cercano (nearest_cat_adjust)
+#guardamos el join como centroids_nearest_coast_joined
 print('merging the two tables: nearest and centroids: correct co-ordiantes')
 jafv1_dict = {
     'DISCARD_NONMATCHING': False,
-    'FIELD': 'ne_10m_adm',
+    'FIELD': 'ne_10m_adm', #variable a mergear (pais)
     'FIELDS_TO_COPY': None,
-    'FIELD_2': 'ne_10m_adm',
-    'INPUT': centroidsout,
-    'INPUT_2': nearest_cat_adjust_dropfields,
+    'FIELD_2': 'ne_10m_adm', #variable a mergear (pais)
+    'INPUT': centroidsout, #objeto a mergear
+    'INPUT_2': nearest_cat_adjust_dropfields, #objeto a mergear
     'METHOD': 1,
     'PREFIX': '',
     'OUTPUT': 'memory:'
@@ -191,7 +204,7 @@ jafv1_dict = {
 centroids_nearest_coast_joined = processing.run('native:joinattributestable', jafv1_dict)['OUTPUT']
 
 # # Drop field(s)
-# Borramos las variables innceesarias
+# Borramos las variables innceesarias del join
  print('dropping unnecessary fields, nearest and centroids merge')
  df4_dict = {
      'COLUMN': ['ne_10m_adm_2', 'ADMIN_2', 'ISO_A3_2'],
@@ -217,7 +230,8 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
  centroids_nearest_coast_distance_joined = processing.run('native:joinattributestable', jafv2_dict)['OUTPUT']
 
 # # Extract vertices
-# extraemos vértices  
+# extraemos vértices de distancia para quedarnos solamente con aquellos que estén en la costa
+#guardamos como objeto extract_by_attribute 
  print('extracting vertices (get endpoints of each line)')     
  ev_dict = {
      'INPUT': centroids_nearest_coast_distance_joined,
@@ -225,13 +239,11 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
  }
  extract_vertices = processing.run('native:extractvertices', ev_dict)['OUTPUT']
 
-# # Extract by attribute
-# ##################################################################
  print('keeping only vertices on coast')
  eba_dict = {
-     'FIELD': 'distance',
+     'FIELD': 'distance',#usamos la variable distancia
      'INPUT': extract_vertices,
-     'OPERATOR': 2,
+     'OPERATOR': 2,#para extraer vertice
      'VALUE': '0',
      'OUTPUT': 'memory:'
  }
@@ -241,11 +253,11 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
 # agregamos las coordinadas del centroide
  print('creating new field: centroid latitude (keep field names straight)')
  fc2_dict = {
-     'FIELD_LENGTH': 10,
-     'FIELD_NAME': 'cent_lat',
-     'FIELD_PRECISION': 10,
-     'FIELD_TYPE': 0,
-     'FORMULA': 'attribute($currentfeature, \'ycoord\')',
+     'FIELD_LENGTH': 10,#largo del nombre
+     'FIELD_NAME': 'cent_lat',#y_coord
+     'FIELD_PRECISION': 10,#precisión
+     'FIELD_TYPE': 0,#float
+     'FORMULA': 'attribute($currentfeature, \'ycoord\')',#formula para obtener latitud
      'INPUT': extract_by_attribute,
      'NEW_FIELD': False,
      'OUTPUT': 'memory:'
@@ -255,7 +267,7 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
  print('creating new field: centroid longitude (keep field names straight)')
  fc3_dict = {
      'FIELD_LENGTH': 10,
-     'FIELD_NAME': 'cent_lon',
+     'FIELD_NAME': 'cent_lon',#x_coord
      'FIELD_PRECISION': 10,
      'FIELD_TYPE': 0,
      'FORMULA': 'attribute($currentfeature, \'xcoord\')',
@@ -270,7 +282,7 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
 # Borrar columnas innecesarias
  print('dropping unnecessary fields')
  allfields = [field.name() for field in added_field_cent_lon.fields()]
- keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3', 'cent_lat', 'cent_lon']
+ keepfields = ['ne_10m_adm', 'ADMIN', 'ISO_A3', 'cent_lat', 'cent_lon']#variables que quedan
  dropfields = [field for field in allfields if field not in keepfields]
 
  df5_dict = {
@@ -281,7 +293,7 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
  centroids_lat_lon_drop_fields = processing.run('qgis:deletecolumn', df5_dict)['OUTPUT']
 
 # # Add geometry attributes
-# Agregar coordenadas    
+# Agregar coordenadas. Aplican los comentarios de pasos anteriores    
  print('adding co-ordinates to coast points')    
  aga2_dict = {
      'CALC_METHOD': 0,
@@ -318,7 +330,7 @@ centroids_nearest_coast_joined = processing.run('native:joinattributestable', ja
  added_field_coast_lon = processing.run('qgis:fieldcalculator', fc5_dict)['OUTPUT']
 
 # # Drop field(s)
-# #guardar 
+# #guardar las coordenadas en el csvout
  print('dropping unnecessary fields')
 
  df6_dict = {
