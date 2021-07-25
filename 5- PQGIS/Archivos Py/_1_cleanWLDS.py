@@ -1,40 +1,49 @@
-#########################################################################################
-#########################################################################################
+##Objetivo: emprolijar información sobre lenguajes
 # SETUP PREAMBLE FOR RUNNING STANDALONE SCRIPTS.
 # NOT NECESSARY IF YOU ARE RUNNING THIS INSIDE THE QGIS GUI.
-# print('preliminary setup')
-# import sys
-# import os
+#Importacion de librerias
+ print('preliminary setup')
+ import sys
+ import os
 
-# from qgis.core import (
-#     QgsApplication, 
-#     QgsVectorLayer,
-#     QgsCoordinateReferenceSystem,
-# )
+ from qgis.core import (
+     QgsApplication, 
+     QgsVectorLayer,
+     QgsCoordinateReferenceSystem,
+ )
 
-# from qgis.analysis import QgsNativeAlgorithms
+ from qgis.analysis import QgsNativeAlgorithms
 
 # # See https://gis.stackexchange.com/a/155852/4972 for details about the prefix 
-# QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
-# qgs = QgsApplication([], False)
-# qgs.initQgis()
+#Ruta de la ubicacion de qgis 
+ QgsApplication.setPrefixPath('C:/OSGeo4W64/apps/qgis', True)
+ qgs = QgsApplication([], False)
+ qgs.initQgis()
 
-# # Add the path to Processing framework  
-# sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
+#Ruta del marco de procesamiento 
+ sys.path.append('C:/OSGeo4W64/apps/qgis/python/plugins')
 
-# # Import and initialize Processing framework
-# import processing
-# from processing.core.Processing import Processing
-# Processing.initialize()
-# QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
+# Importar e iniciar marco de procesamiento
+ import processing
+ from processing.core.Processing import Processing
+ Processing.initialize()
+ QgsApplication.processingRegistry().addProvider(QgsNativeAlgorithms())
 #########################################################################################
-#########################################################################################
 
-# Seteamos directorios de inputs y outputs
+# Setear carpetas de inputs a partir de objetos
 mainpath = "/Users/magibbons/Desktop/Herramientas/Clase5/input" #carpeta donde estan los inputs
-wldsin = "{}/langa.shp".format(mainpath) #archivo input
-outpath = "{}/_output/".format(mainpath)#carpeta para outputs 
+outpath = "{}/_output/".format(mainpath)#carpeta para outputs pero que también guardar inputs que son outputs de código anterior
+
+# Inputs
+wldsin = "{}/langa.shp".format(mainpath) #archivo input de nlenguajes
+
+#Outputs
 wldsout = "{}/wlds_cleaned.shp".format(outpath) #archivo output
+
+#Se utiliza un condicional para que si no existe la ruta descripta, se cree una
+# NOTA: si se corre el script directo desde la linea de comando, se puede especificar
+#rutas relativas, e.g. mainpath = "../gis_data", pero no funciona con la consola
+#de python en QGIS
 if not os.path.exists(outpath):  #Chequeo si el directorio existe o no
 	os.mkdir(outpath) #Si no existe la ruta, genero el directorio
 #OS module en Python provee funciones para interactuar con el sistema operativo
@@ -56,20 +65,18 @@ if not os.path.exists(outpath):  #Chequeo si el directorio existe o no
 #########################################################
 # Fix geometries
 #Corregimos la geometria del shapefile
-#########################################################
 print('fixing geometries')
 fixgeo_dict = {
-    'INPUT': wldsin, #shape file
+    'INPUT': wldsin, #shape file input
     'OUTPUT': 'memory:'#guardamos en la memoria el archivo generado
 }
-fix_geo = processing.run('native:fixgeometries', fixgeo_dict)['OUTPUT']    
+fix_geo = processing.run('native:fixgeometries', fixgeo_dict)['OUTPUT'] #output de fix geometries, guardado en base a la memoria   
 
 #######################################################################
 # Add autoincremental field
 # Se agrega un campo GID que sera un numero que identifique al idioma
 #En este caso la funcion processing.run usa el algorimo native:addautoincrementalfield
 #para agregar el campo cid. 
-#######################################################################
 print('adding autoincremental id-field')
 aaicf_dict = {
     'FIELD_NAME': 'GID', #nombre del nuevo campo
@@ -81,14 +88,13 @@ aaicf_dict = {
     'START': 1,#indica que se empiece a contar a partir del numero 1
     'OUTPUT': 'memory:'#guardamos en la memoria el archivo generado
 }
-autoinc_id = processing.run('native:addautoincrementalfield', aaicf_dict)['OUTPUT'] 
+autoinc_id = processing.run('native:addautoincrementalfield', aaicf_dict)['OUTPUT'] #output de fix autoincremental
 
 #########################################################
 # Field calculator
 #Calculamos el largo de la variable NAME_PROP (cantidad de caracteres) y luego
 #filtramos para quedarnos solo con los campos donde NAME_PROP tenga menos de
 #10 caracteres
-#########################################################
 print('copying language name into a field with shorter attribute name')
 fc_dict = {
     'FIELD_LENGTH': 10,#indicamos hasta 10 caracteres para el filtro
@@ -100,20 +106,19 @@ fc_dict = {
     'NEW_FIELD': True,#indica que estamos generando un nuevo campo
     'OUTPUT': 'memory:'#guardamos en la memoria el archivo generado
 }
-field_calc = processing.run('qgis:fieldcalculator', fc_dict)['OUTPUT']
+field_calc = processing.run('qgis:fieldcalculator', fc_dict)['OUTPUT']  #output del field calculator
 
 #########################################################
 # Drop field(s)
 # Se quitan campos innecesarios de la base recién generada
-#########################################################
 print('dropping fields except GID, ID, lnm')
 #queremos eliminar todos los campos excepto los mencionados en keepfields
 allfields = [field.name() for field in field_calc.fields()]
 keepfields = ['GID', 'ID', 'lnm']
-dropfields = [field for field in allfields if field not in keepfields]
+dropfields = [field for field in allfields if field not in keepfields]#objeto que contiene columnas a eliminar
 
 df3_dict = {
-   'COLUMN': dropfields,#columnas a eliminar
+   'COLUMN': dropfields,# eliminamos las columnas mencionadas en dropfields
    'INPUT': field_calc,#partimos de ultimo archivo generado
    'OUTPUT': wldsout #guardamos este archivo con el nombre de wldsout ya que antes definimos la ruta para el archivo con este nombre
 }
