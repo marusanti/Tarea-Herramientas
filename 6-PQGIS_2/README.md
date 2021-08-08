@@ -12,7 +12,7 @@ El repositorio contiene:
 1) Una carpeta de data
 2) Un .qgz con el proyecto en QGIS
 3) Un .model3, con el modelo facilmente replicable
-4) Un pdf con los resultados
+4) Un mapa de corrientes con las rutas y ciudades
 
 Matías Harari y Mariana Santi
 
