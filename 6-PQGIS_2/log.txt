@@ -1,0 +1,291 @@
+QGIS version: 3.20.1-Odense
+QGIS code revision: 1c3c5cd6
+Qt version: 5.15.2
+Python version: 3.9.5
+GDAL version: 3.3.1
+GEOS version: 3.9.1-CAPI-1.14.2
+PROJ version: Rel. 8.1.0, July 1st, 2021
+PDAL version: 2.3.0 (git-version: eac774)
+Processing algorithm…
+Algorithm 'preparar_shapes' starting…
+Input parameters:
+{ 'grass7:v.distance_1:distance_centroids' : 'TEMPORARY_OUTPUT', 'grass7:v.distance_1:from_centroids' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_1:trenes_split_ruta' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_2:trenes_snap_ruta' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_3:connectors' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_4:union_trenruta' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_5:renruta_split_connectors' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_6:connectors_split_trenruta' : 'TEMPORARY_OUTPUT', 'native:fixgeometries_7:union' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_1:ruta_split_trenes' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_2:trenes_snap_ruta' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_3:connectors' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_4:union_trenruta' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_5:trenruta_split_connectors' : 'TEMPORARY_OUTPUT', 'native:multiparttosingleparts_6:connectors_split_trenruta' : 'TEMPORARY_OUTPUT', 'native:reprojectlayer_1:treneswgs84' : 'TEMPORARY_OUTPUT', 'native:reprojectlayer_2:capitaleswgs84' : 'TEMPORARY_OUTPUT', 'native:reprojectlayer_3:rutaswgs84' : 'TEMPORARY_OUTPUT', 'native:snapgeometries_1:trenes_snap_ruta' : 'TEMPORARY_OUTPUT', 'native:snapgeometries_2:connectors' : 'TEMPORARY_OUTPUT', 'native:splitwithlines_1:trenes_split_ruta' : 'TEMPORARY_OUTPUT', 'native:splitwithlines_2:ruta_split_trenes' : 'TEMPORARY_OUTPUT', 'native:splitwithlines_3:trenruta_split_connectors' : 'TEMPORARY_OUTPUT', 'native:splitwithlines_4:connectors_split_trenrut' : 'TEMPORARY_OUTPUT', 'native:union_1:union_trenruta' : 'TEMPORARY_OUTPUT', 'native:union_2:union' : 'TEMPORARY_OUTPUT', 'qgis:fieldcalculator_1:union' : 'TEMPORARY_OUTPUT', 'qgis:fieldcalculator_3:tren' : 'TEMPORARY_OUTPUT', 'qgis:fieldcalculator_4:capitales' : 'TEMPORARY_OUTPUT', 'qgis:fieldcalculator_5:ruta' : 'TEMPORARY_OUTPUT', 'qgis:fieldcalculator_6:union' : 'TEMPORARY_OUTPUT' }
+
+Prepare algorithm: native:reprojectlayer_3
+Running Reproject rutas [1/35]
+Input Parameters:
+{ INPUT: 'C:/Users/matia/Documents/UDESA/7_HComp/Tarea-Herramientas/6-PQGIS_2/data/_3_4_1_1_6_rutas_nacionales_dnv18_view.shp', OPERATION: '', OUTPUT: 'TEMPORARY_OUTPUT', TARGET_CRS: QgsCoordinateReferenceSystem('EPSG:4326') }
+OK. Execution took 0.089 s (1 outputs).
+Prepare algorithm: native:reprojectlayer_2
+Running Reproject capitales [2/35]
+Input Parameters:
+{ INPUT: 'C:/Users/matia/Documents/UDESA/7_HComp/Tarea-Herramientas/6-PQGIS_2/data/capitales.shp', OPERATION: '', OUTPUT: 'TEMPORARY_OUTPUT', TARGET_CRS: QgsCoordinateReferenceSystem('EPSG:4326') }
+OK. Execution took 0.005 s (1 outputs).
+Prepare algorithm: native:reprojectlayer_1
+Running Reproject trenes [3/35]
+Input Parameters:
+{ INPUT: 'C:/Users/matia/Documents/UDESA/7_HComp/Tarea-Herramientas/6-PQGIS_2/data/lineas_de_transporte_ferroviario_AN010.dbf|layername=lineas_de_transporte_ferroviario_AN010', OPERATION: '', OUTPUT: 'TEMPORARY_OUTPUT', TARGET_CRS: QgsCoordinateReferenceSystem('OGC:CRS84') }
+OK. Execution took 0.097 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_5
+Running Field calculator rutas [4/35]
+Input Parameters:
+{ FIELD_LENGTH: 10, FIELD_NAME: 'ruta', FIELD_PRECISION: 3, FIELD_TYPE: 0, FORMULA: '1', INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=id_ruta:integer(9,0)&field=FNA:string(254,0)&field=GNA:string(254,0)&field=NAM:string(254,0)&field=RTN:string(254,0)&field=Sentido:string(254,0)&field=FUN:integer(9,0)&field=HCT:integer(9,0)&field=SAG:string(254,0)&field=Tipo_Calza:string(254,0)&field=Progresiva:double(32,31)&uid={da3dbb51-05fb-4ba7-b0c9-f3ffddf8f708}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.008 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_3
+Running Field calculator trenes [5/35]
+Input Parameters:
+{ FIELD_LENGTH: 10, FIELD_NAME: 'tren', FIELD_PRECISION: 3, FIELD_TYPE: 0, FORMULA: '1', INPUT: 'memory://MultiLineString?crs=OGC:CRS84&field=gid:integer(9,0)&field=entidad:long(18,0)&field=objeto:string(50,0)&field=fna:string(150,0)&field=gna:string(50,0)&field=nam:string(100,0)&field=fun:double(23,15)&field=rgc:double(23,15)&field=ltn:long(18,0)&field=loc:double(23,15)&field=fdc:string(100,0)&field=sag:string(50,0)&uid={f77fbcaa-e133-4a0a-a1e0-b55abd6f296f}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.041 s (1 outputs).
+Prepare algorithm: native:deletecolumn_2
+Running Drop field(s) rutas [6/35]
+Input Parameters:
+{ COLUMN: ['keep_fields=[\'ruta\']'], INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=id_ruta:integer(9,0)&field=FNA:string(254,0)&field=GNA:string(254,0)&field=NAM:string(254,0)&field=RTN:string(254,0)&field=Sentido:string(254,0)&field=FUN:integer(9,0)&field=HCT:integer(9,0)&field=SAG:string(254,0)&field=Tipo_Calza:string(254,0)&field=Progresiva:double(32,31)&field=ruta:double(10,3)&uid={c28d4ecc-cb77-41ba-8e0f-38b4dc0ff42c}', OUTPUT: 'memory:Remaining fields' }
+Field “keep_fields=['ruta']” does not exist in input layer 
+OK. Execution took 0.021 s (1 outputs).
+Prepare algorithm: native:deletecolumn_1
+Running Drop field(s) trenes [7/35]
+Input Parameters:
+{ COLUMN: ['keep_fields=[\'tren\']'], INPUT: 'memory://MultiLineString?field=gid:integer(9,0)&field=entidad:long(18,0)&field=objeto:string(50,0)&field=fna:string(150,0)&field=gna:string(50,0)&field=nam:string(100,0)&field=fun:double(23,15)&field=rgc:double(23,15)&field=ltn:long(18,0)&field=loc:double(23,15)&field=fdc:string(100,0)&field=sag:string(50,0)&field=tren:double(10,3)&uid={e0f69777-62c5-4c14-a782-e56ae4fa04a6}', OUTPUT: 'memory:Remaining fields' }
+Field “keep_fields=['tren']” does not exist in input layer 
+OK. Execution took 0.08 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_4
+Running Field calculator capitales [8/35]
+Input Parameters:
+{ FIELD_LENGTH: 10, FIELD_NAME: 'capitales', FIELD_PRECISION: 3, FIELD_TYPE: 0, FORMULA: '1', INPUT: 'memory://Point?crs=EPSG:4326&field=country:string(254,0)&field=state:string(254,0)&field=city:string(254,0)&field=addres:string(254,0)&field=result_num:string(254,0)&field=osm_id:string(254,0)&field=display_na:string(254,0)&field=category:string(254,0)&field=type:string(254,0)&field=latlong:string(254,0)&uid={3093f4f3-18e9-41e6-b81e-350c1cbfc6fd}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.003 s (1 outputs).
+Prepare algorithm: native:retainfields_2
+Running Retain fields rutas [9/35]
+Input Parameters:
+{ FIELDS: ['ruta'], INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=id_ruta:integer(9,0)&field=FNA:string(254,0)&field=GNA:string(254,0)&field=NAM:string(254,0)&field=RTN:string(254,0)&field=Sentido:string(254,0)&field=FUN:integer(9,0)&field=HCT:integer(9,0)&field=SAG:string(254,0)&field=Tipo_Calza:string(254,0)&field=Progresiva:double(32,31)&field=ruta:double(10,3)&uid={e65a5766-d269-44ff-897f-b4acdc636088}', OUTPUT: 'memory:Retained fields' }
+OK. Execution took 0.006 s (1 outputs).
+Prepare algorithm: native:retainfields_1
+Running Retain fields tren [10/35]
+Input Parameters:
+{ FIELDS: ['tren'], INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=gid:integer(9,0)&field=entidad:long(18,0)&field=objeto:string(50,0)&field=fna:string(150,0)&field=gna:string(50,0)&field=nam:string(100,0)&field=fun:double(23,15)&field=rgc:double(23,15)&field=ltn:long(18,0)&field=loc:double(23,15)&field=fdc:string(100,0)&field=sag:string(50,0)&field=tren:double(10,3)&uid={2bab4894-5eea-44c7-b04a-54d1711ae4e3}', OUTPUT: 'memory:Retained fields' }
+OK. Execution took 0.014 s (1 outputs).
+Prepare algorithm: native:splitwithlines_2
+Running Split with lines 2 [11/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={296513bb-a78f-4f63-8669-df18c98cc39c}', LINES: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&uid={8899ce45-7109-470f-88dc-7470a9604182}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 195.771 s (1 outputs).
+Prepare algorithm: native:splitwithlines_1
+Running Split with lines 1 [12/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&uid={8899ce45-7109-470f-88dc-7470a9604182}', LINES: 'memory://MultiLineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={296513bb-a78f-4f63-8669-df18c98cc39c}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 18.879 s (1 outputs).
+Prepare algorithm: native:fixgeometries_1
+Running Fix geometries 1 [13/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&uid={7871ede4-61e4-4114-be41-a2d9aac32622}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.07 s (1 outputs).
+Prepare algorithm: native:multiparttosingleparts_1
+Running Multipart to singleparts 1 [14/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&uid={a0b218c0-536b-4e70-a063-484f38f3bfa3}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.029 s (1 outputs).
+Prepare algorithm: native:fixgeometries_2
+Running Fix geometries 2 [15/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={ddbb4872-d698-4864-8235-4db5f715ba2d}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.052 s (1 outputs).
+Prepare algorithm: native:snapgeometries_1
+Running Snap geometries to layer [16/35]
+Input Parameters:
+{ BEHAVIOR: 0, INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&uid={7871ede4-61e4-4114-be41-a2d9aac32622}', OUTPUT: 'TEMPORARY_OUTPUT', REFERENCE_LAYER: 'memory://MultiLineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={ddbb4872-d698-4864-8235-4db5f715ba2d}', TOLERANCE: 0.01 }
+OK. Execution took 108.223 s (1 outputs).
+Prepare algorithm: native:multiparttosingleparts_2
+Running Multipart to singleparts 2 [17/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={d9ef24f9-8fdb-48c6-b5cb-2e7c7159cd45}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.02 s (1 outputs).
+Prepare algorithm: native:union_1
+Running Union [18/35]
+Input Parameters:
+{ INPUT: 'memory://LineString?crs=EPSG:4326&field=tren:double(10,3)&uid={3728054d-82a6-4f1a-a9b9-63b6917d6fb6}', OUTPUT: 'TEMPORARY_OUTPUT', OVERLAY: 'memory://LineString?crs=EPSG:4326&field=ruta:double(10,3)&uid={e1401a95-d698-4784-8b93-eb51a82c5e75}', OVERLAY_FIELDS_PREFIX: '' }
+OK. Execution took 6.139 s (1 outputs).
+Prepare algorithm: native:fixgeometries_4
+Running Fix geometries 4 [19/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={37743a90-0694-47c3-b843-9fabfdfeca4d}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.112 s (1 outputs).
+Prepare algorithm: grass7:v.distance_1
+Running v.distance [20/35]
+Input Parameters:
+{ GRASS_MIN_AREA_PARAMETER: 0.0001, GRASS_OUTPUT_TYPE_PARAMETER: 0, GRASS_REGION_PARAMETER: None, GRASS_SNAP_TOLERANCE_PARAMETER: -1, GRASS_VECTOR_DSCO: '', GRASS_VECTOR_EXPORT_NOCAT: False, GRASS_VECTOR_LCO: '', column: ['city'], dmax: -1, dmin: -1, from: 'memory://Point?crs=EPSG:4326&field=country:string(254,0)&field=state:string(254,0)&field=city:string(254,0)&field=addres:string(254,0)&field=result_num:string(254,0)&field=osm_id:string(254,0)&field=display_na:string(254,0)&field=category:string(254,0)&field=type:string(254,0)&field=latlong:string(254,0)&uid={3093f4f3-18e9-41e6-b81e-350c1cbfc6fd}', from_output: 'TEMPORARY_OUTPUT', from_type: [0,1,3], output: 'TEMPORARY_OUTPUT', to: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={37743a90-0694-47c3-b843-9fabfdfeca4d}', to_column: '', to_type: [0,1,3], upload: [0] }
+g.proj -c wkt="C:/Users/matia/AppData/Local/Temp/processing_iAAfTV/16b5fec94cf04690b21e30cbb9790ee9/crs.prj"
+v.in.ogr min_area=0.0001 snap=-1.0 input="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\3fcfc1ed46c04661be99d55a3606921c\from.shp" output="vector_610eb15691a5f8" --overwrite -o
+v.in.ogr min_area=0.0001 snap=-1.0 input="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\5d95d34b8eff46cfb5e63e2db4966a3b\to.shp" output="vector_610eb156ee7819" --overwrite -o
+g.region n=-22.047985795999978 s=-54.972178 e=-53.640769 w=-72.30430019999994
+v.distance from=vector_610eb15691a5f8 from_type="point,line,area" to=vector_610eb156ee7819 to_type="point,line,area" dmax=-1 dmin=-1 upload="cat" column=city output=output5bcb244cf75147c6bf337cfa1f9fa6f1 --overwrite
+v.out.ogr type="auto" input="output5bcb244cf75147c6bf337cfa1f9fa6f1" output="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\d0cdeec17b394ce8bbe9f717a0c61f11\output.gpkg" format="GPKG" --overwrite
+v.out.ogr type="auto" input="vector_610eb15691a5f8" output="C:/Users/matia/AppData/Local/Temp/processing_iAAfTV/2c8add5cf8bb48699ef8bdac6c00250b/from_output.gpkg" format="GPKG" --overwrite
+Starting GRASS GIS...
+WARNING: Concurrent mapset locking is not supported on Windows
+Cleaning up temporary files...
+Executing <C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\grassdata\grass_batch_job.cmd> ...
+C:\Users\matia\Documents>chcp 1252 1>NUL
+C:\Users\matia\Documents>g.proj -c wkt="C:/Users/matia/AppData/Local/Temp/processing_iAAfTV/16b5fec94cf04690b21e30cbb9790ee9/crs.prj"
+Default region was updated to the new projection, but if you have multiple mapsets `g.region -d` should be run in each to update the region from the default
+Projection information updated
+C:\Users\matia\Documents>v.in.ogr min_area=0.0001 snap=-1.0 input="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\3fcfc1ed46c04661be99d55a3606921c\from.shp" output="vector_610eb15691a5f8" --overwrite -o
+Over-riding projection check
+Check if OGR layer <from> contains polygons...
+0..4..8..12..16..20..24..28..32..36..40..44..48..52..56..60..64..68..72..76..80..84..88..92..96..100
+Creating attribute table for layer <from>...
+Importing 25 features (OGR layer <from>)...
+0..4..8..12..16..20..24..28..32..36..40..44..48..52..56..60..64..68..72..76..80..84..88..92..96..100
+-----------------------------------------------------
+Building topology for vector map <vector_610eb15691a5f8@PERMANENT>...
+Registering primitives...
+C:\Users\matia\Documents>v.in.ogr min_area=0.0001 snap=-1.0 input="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\5d95d34b8eff46cfb5e63e2db4966a3b\to.shp" output="vector_610eb156ee7819" --overwrite -o
+Over-riding projection check
+Check if OGR layer <to> contains polygons...
+0..2..4..6..8..10..12..14..16..18..20..22..24..26..28..30..32..34..36..38..40..42..44..46..48..50..52..54..56..58..60..62..64..66..68..70..72..74..76..78..80..82..84..86..88..90..92..94..96..98..100
+Creating attribute table for layer <to>...
+Importing 7941 features (OGR layer <to>)...
+0..2..4..6..8..10..12..14..16..18..20..22..24..26..28..30..32..34..36..38..40..42..44..46..48..50..52..54..56..58..60..62..64..66..68..70..72..74..76..78..80..82..84..86..88..90..92..94..96..98..100
+-----------------------------------------------------
+Building topology for vector map <vector_610eb156ee7819@PERMANENT>...
+Registering primitives...
+C:\Users\matia\Documents>g.region n=-22.047985795999978 s=-54.972178 e=-53.640769 w=-72.30430019999994
+C:\Users\matia\Documents>v.distance from=vector_610eb15691a5f8 from_type="point,line,area" to=vector_610eb156ee7819 to_type="point,line,area" dmax=-1 dmin=-1 upload="cat" column=city output=output5bcb244cf75147c6bf337cfa1f9fa6f1 --overwrite
+Finding nearest features...
+0..8..16..24..32..40..48..56..64..72..80..88..96..100
+Update vector attributes...
+0..4..8..12..16..20..24..28..32..36..40..44..48..52..56..60..64..68..72..76..80..84..88..92..96..100
+v.distance complete. 25 records updated.
+Building topology for vector map <output5bcb244cf75147c6bf337cfa1f9fa6f1@PERMANENT>...
+Registering primitives...
+C:\Users\matia\Documents>v.out.ogr type="auto" input="output5bcb244cf75147c6bf337cfa1f9fa6f1" output="C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\d0cdeec17b394ce8bbe9f717a0c61f11\output.gpkg" format="GPKG" --overwrite
+WARNING: No attribute table found -> using only category numbers as attributes
+Exporting 25 features...
+8..16..24..32..40..48..56..64..72..80..88..96..100
+v.out.ogr complete. 25 features (Line String type) written to <output5bcb244cf75147c6bf337cfa1f9fa6f1> (GPKG format).
+C:\Users\matia\Documents>v.out.ogr type="auto" input="vector_610eb15691a5f8" output="C:/Users/matia/AppData/Local/Temp/processing_iAAfTV/2c8add5cf8bb48699ef8bdac6c00250b/from_output.gpkg" format="GPKG" --overwrite
+Exporting 25 features...
+8..16..24..32..40..48..56..64..72..80..88..96..100
+v.out.ogr complete. 25 features (Point type) written to <vector_610eb15691a5f8> (GPKG format).
+C:\Users\matia\Documents>exit
+Execution of <C:\Users\matia\AppData\Local\Temp\processing_iAAfTV\grassdata\grass_batch_job.cmd> finished.
+Cleaning up default sqlite database ...
+Cleaning up temporary files...
+OK. Execution took 5.18 s (2 outputs).
+Prepare algorithm: native:multiparttosingleparts_4
+Running Multipart to singleparts 4 [21/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={47476c16-407c-4398-8ebc-7b340316cedf}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.059 s (1 outputs).
+Prepare algorithm: native:snapgeometries_2
+Running Snap geometries to layer 3 [22/35]
+Input Parameters:
+{ BEHAVIOR: 0, INPUT: 'C:\\Users\\matia\\AppData\\Local\\Temp\\processing_iAAfTV\\d0cdeec17b394ce8bbe9f717a0c61f11\\output.gpkg', OUTPUT: 'TEMPORARY_OUTPUT', REFERENCE_LAYER: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={37743a90-0694-47c3-b843-9fabfdfeca4d}', TOLERANCE: 0.01 }
+OK. Execution took 0.228 s (1 outputs).
+Prepare algorithm: native:fixgeometries_3
+Running Fix geometries 3 [23/35]
+Input Parameters:
+{ INPUT: 'memory://LineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={a006f295-96fa-4df4-82bd-03b602e13613}', OUTPUT: 'TEMPORARY_OUTPUT' }
+Fixing geometry for feature 5 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 6 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 8 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 15 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 18 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 21 resulted in MultiPoint, geometry has been dropped.
+Fixing geometry for feature 23 resulted in MultiPoint, geometry has been dropped.
+OK. Execution took 0.269 s (1 outputs).
+Prepare algorithm: native:multiparttosingleparts_3
+Running Multipart to singleparts 3 [24/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={3d1b0869-1fe5-472e-b58d-7c66cd209d54}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.009 s (1 outputs).
+Prepare algorithm: native:splitwithlines_3
+Running Split with lines 3 [25/35]
+Input Parameters:
+{ INPUT: 'memory://LineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={3756018b-07e8-481f-b588-279897cb2062}', LINES: 'memory://LineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={12a56bd9-f9ef-4b47-92dc-7fc1e3989335}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.105 s (1 outputs).
+Prepare algorithm: native:union_2
+Running Union 2 [26/35]
+Input Parameters:
+{ INPUT: 'memory://LineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={3756018b-07e8-481f-b588-279897cb2062}', OUTPUT: 'TEMPORARY_OUTPUT', OVERLAY: 'memory://LineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={12a56bd9-f9ef-4b47-92dc-7fc1e3989335}', OVERLAY_FIELDS_PREFIX: '' }
+OK. Execution took 0.242 s (1 outputs).
+Prepare algorithm: native:splitwithlines_4
+Running Split with lines 4 [27/35]
+Input Parameters:
+{ INPUT: 'memory://LineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={12a56bd9-f9ef-4b47-92dc-7fc1e3989335}', LINES: 'memory://LineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={3756018b-07e8-481f-b588-279897cb2062}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.195 s (1 outputs).
+Prepare algorithm: native:fixgeometries_7
+Running Fix geometries 7 [28/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&field=tren:double(10,3)&field=ruta:double(10,3)&uid={054f1f98-cf21-4b32-bcd6-20b55cbae195}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.128 s (1 outputs).
+Prepare algorithm: native:fixgeometries_5
+Running Fix geometries 5 [29/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={8aec17db-51a8-4ffe-b35f-c0401ac7b9d8}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.009 s (1 outputs).
+Prepare algorithm: native:multiparttosingleparts_5
+Running Multipart to singleparts 5 [30/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&uid={901a0549-8a57-423b-8d9a-46d4432e15de}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.008 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_1
+Running Field calculator length [31/35]
+Input Parameters:
+{ FIELD_LENGTH: 10, FIELD_NAME: 'len_km', FIELD_PRECISION: 6, FIELD_TYPE: 0, FORMULA: '$length', INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&field=tren:double(10,3)&field=ruta:double(10,3)&uid={11b7937d-6ee3-4357-a5dd-9c62dd5a0e97}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 1.093 s (1 outputs).
+Prepare algorithm: native:fixgeometries_6
+Running Fix geometries 6 [32/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={65a1fe5d-4c30-4b56-9904-94a83ea1a827}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.115 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_2
+Running Field calculator when [33/35]
+Input Parameters:
+{ FIELD_LENGTH: 20, FIELD_NAME: 'type', FIELD_PRECISION: 3, FIELD_TYPE: 2, FORMULA: 'CASE\n WHEN (\"cat\" IS NOT NULL) AND (\"ruta\" IS NULL) AND (\"tren\" IS NULL) THEN \'ttren\'\n WHEN (\"tren\" = 1) AND (\"ruta\" IS NULL) THEN \'tren\'\n WHEN (\"ruta\" = 1) THEN \'ruta\'\nEND', INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&field=tren:double(10,3)&field=ruta:double(10,3)&field=len_km:double(10,6)&uid={a9d40822-911d-464c-8792-f97f986bf720}', OUTPUT: 'memory:Calculated' }
+OK. Execution took 0.074 s (1 outputs).
+Prepare algorithm: native:multiparttosingleparts_6
+Running Multipart to singleparts 6 [34/35]
+Input Parameters:
+{ INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=tren:double(10,3)&field=ruta:double(10,3)&uid={38c48a5b-0b08-4ddd-9be4-ffe56774b9e8}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.041 s (1 outputs).
+Prepare algorithm: qgis:fieldcalculator_6
+Running Field calculator cost [35/35]
+Input Parameters:
+{ FIELD_LENGTH: 10, FIELD_NAME: 'cost', FIELD_PRECISION: 6, FIELD_TYPE: 0, FORMULA: 'CASE\n WHEN (\"type\" = \'ttrainl\') THEN \"len_km\"*0.62*0.0063\n WHEN (\"type\" = \'ruta\') THEN \"len_km\"*0.62*0.0049\n WHEN (\"type\" = \'train\') THEN \"len_km\"*0.62*0.231\nEND', INPUT: 'memory://MultiLineString?crs=EPSG:4326&field=fid:long(0,0)&field=cat:integer(0,0)&field=tren:double(10,3)&field=ruta:double(10,3)&field=len_km:double(10,6)&field=type:string(20,3)&uid={813ee100-e159-4ad8-be25-f6665f7df662}', OUTPUT: 'TEMPORARY_OUTPUT' }
+OK. Execution took 0.076 s (1 outputs).
+Model processed OK. Executed 35 algorithms total in 355.14 s.
+Execution completed in 355.39 seconds (5 minutes 55 seconds)
+Results:
+{'grass7:v.distance_1:distance_centroids': 'C:\\Users\\matia\\AppData\\Local\\Temp\\processing_iAAfTV\\d0cdeec17b394ce8bbe9f717a0c61f11\\output.gpkg',
+'grass7:v.distance_1:from_centroids': <QgsProcessingOutputLayerDefinition {'sink':TEMPORARY_OUTPUT, 'createOptions': {'fileEncoding': 'System'}}>,
+'native:fixgeometries_1:trenes_split_ruta': 'Fixed_geometries_4b010171_881c_4b29_aae8_fa8fd94079b9',
+'native:fixgeometries_2:trenes_snap_ruta': 'Fixed_geometries_767d1cc5_628a_4861_a99b_9402b878d58e',
+'native:fixgeometries_3:connectors': 'Fixed_geometries_9562e2b4_fe57_441d_a7b6_00cf4995ff2a',
+'native:fixgeometries_4:union_trenruta': 'Fixed_geometries_66303704_47f9_4695_8fec_f3a0e19c4c36',
+'native:fixgeometries_5:renruta_split_connectors': 'Fixed_geometries_8c38ac2e_1b5f_4022_a41e_36d95906e2fe',
+'native:fixgeometries_6:connectors_split_trenruta': 'Fixed_geometries_7195719c_f84f_4cc8_a0a8_644438d07a72',
+'native:fixgeometries_7:union': 'Fixed_geometries_cbff6dfd_4d3e_47d6_98da_b84873834636',
+'native:multiparttosingleparts_1:ruta_split_trenes': 'Single_parts_3f553bda_9866_435f_a32e_3eaa4f58416a',
+'native:multiparttosingleparts_2:trenes_snap_ruta': 'Single_parts_483824dc_88d7_41b4_b4f7_268a53f4f3ad',
+'native:multiparttosingleparts_3:connectors': 'Single_parts_bfb00952_0a3e_4a3a_92c3_418c70361836',
+'native:multiparttosingleparts_4:union_trenruta': 'Single_parts_f9af5824_20df_4bbc_9046_b05ee1e79adc',
+'native:multiparttosingleparts_5:trenruta_split_connectors': 'Single_parts_d8b358f0_a75a_49c6_81c3_c54e0b5a23d9',
+'native:multiparttosingleparts_6:connectors_split_trenruta': 'Single_parts_7d262346_137a_4b1c_8ec6_4febfc97ee00',
+'native:reprojectlayer_1:treneswgs84': 'Reprojected_83c37023_0d90_4e17_b439_15174b9e91bb',
+'native:reprojectlayer_2:capitaleswgs84': 'Reprojected_382bf0a2_be90_43a2_9aa9_dba49327b6db',
+'native:reprojectlayer_3:rutaswgs84': 'Reprojected_82c33f60_6ce9_4c3d_b7ea_7c7a884df4ec',
+'native:snapgeometries_1:trenes_snap_ruta': 'Snapped_geometry_8444aa5e_b075_460e_bde7_b779578b2223',
+'native:snapgeometries_2:connectors': 'Snapped_geometry_0e8155be_0b3e_4043_82c6_9f42d27a4bf6',
+'native:splitwithlines_1:trenes_split_ruta': 'Split_3d2dd7f5_3553_4d9f_bca1_bb7a97913b2b',
+'native:splitwithlines_2:ruta_split_trenes': 'Split_01e9ad04_f221_456c_ae0e_b95bf0f74997',
+'native:splitwithlines_3:trenruta_split_connectors': 'Split_93d962af_def3_451a_b8a7_8b18d3c6bb18',
+'native:splitwithlines_4:connectors_split_trenrut': 'Split_b016245d_c836_4d3d_a612_dd9010fcd234',
+'native:union_1:union_trenruta': 'Union_05a5cbe1_e3ad_494a_ad58_ea73faf96d12',
+'native:union_2:union': 'Union_60c688dd_6d9e_4d07_9153_7d88d7cc9603',
+'qgis:fieldcalculator_1:union': 'Calculated_3ab3dc00_d2c2_4852_b4d6_4e5396b5ea0c',
+'qgis:fieldcalculator_3:tren': 'Calculated_1be926a5_0f78_41c1_bcc6_a0c6d15f353b',
+'qgis:fieldcalculator_4:capitales': 'Calculated_6e825756_ca5c_47ac_86af_7c4f433e48c3',
+'qgis:fieldcalculator_5:ruta': 'Calculated_04202e06_a45e_4b02_8bea_89d485705708',
+'qgis:fieldcalculator_6:union': 'Calculated_98c5742c_74b4_49d9_bd12_9141395c300c'}
+
+Loading resulting layers
+Algorithm 'preparar_shapes' finished
