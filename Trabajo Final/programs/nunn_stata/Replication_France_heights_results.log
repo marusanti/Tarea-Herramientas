@@ -1,0 +1,31 @@
+-----------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\matia\Documents\UDESA\7_HComp\Tarea-Herramientas\Trabajo Final\data_replication
+> \Replication_France_heights_results.log
+  log type:  text
+ opened on:  20 Aug 2021, 20:21:22
+
+. 
+. use "France_heights_for_web.dta", clear
+(Height of French Soldiers, 1716-1784, Dataset 0001)
+
+. 
+end of do-file
+
+. do "C:\Users\matia\AppData\Local\Temp\STD19f0_000000.tmp"
+
+. br
+
+. 
+end of do-file
+
+. do "C:\Users\matia\AppData\Local\Temp\STD19f0_000000.tmp"
+
+. version 10.1
+
+. 
+. clear matrix
+
+. capture clear
+
+. capture log close

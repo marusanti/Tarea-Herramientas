@@ -1,0 +1,23 @@
+--------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\matia\Documents\UDESA\7_HComp\Tarea-Herramientas\Trabajo Final\data_re
+> plication\Replication_Europe_only_city_level_results.log
+  log type:  text
+ opened on:  20 Aug 2021, 20:26:14
+
+. 
+. use "Europe_only_city_level_panel_for_web.dta", clear
+
+. 
+end of do-file
+
+. do "C:\Users\matia\AppData\Local\Temp\STD19f0_000000.tmp"
+
+. version 10.0
+
+. 
+. capture clear
+
+. clear matrix
+
+. capture log close

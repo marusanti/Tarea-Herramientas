@@ -1,0 +1,14 @@
+--------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\matia\Documents\UDESA\7_HComp\Tarea-Herramientas\Trabajo Final\data_re
+> plication\Replication_country_level_results.log
+  log type:  text
+ opened on:  20 Aug 2021, 21:15:32
+
+. 
+. use "country_level_panel_for_web.dta", clear
+
+. 
+end of do-file
+
+. exit, clear
